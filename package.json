@@ -1,0 +1,14 @@
+{
+  "name": "basic-algorithms-and-data-structures",
+  "version": "1.0.0",
+  "description": "",
+  "main": "linkedList.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^28.1.1"
+  }
+}

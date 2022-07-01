@@ -1,5 +1,10 @@
-// const { LinkedList, Node } = require('./linkedList');
-const { LinkedList, Node } = require('./linkedList.todo');
+const { LinkedList, Node } = require('./linkedList');
+// const { LinkedList, Node } = require('./linkedList.todo');
+
+test('empty', () => {
+    let ll = new LinkedList() 
+    expect(ll.head).toEqual(null)
+})
 
 test('insert', () => {
     let nodes = [new Node(1), new Node(3), new Node(4)] 
@@ -33,4 +38,9 @@ test('delete', () => {
     // try deleting non-contained node
     ll.delete(nodes[0])
     expect(ll.values()).toEqual([2])
+})
+
+test('delete from empty', () => {
+    let ll = new LinkedList();
+    ll.delete(new Node(0))
 })

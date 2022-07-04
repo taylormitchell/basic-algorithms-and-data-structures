@@ -1,5 +1,5 @@
-const { LinkedListDoubly, Node } = require('./linkedListDoubly');
-// const { LinkedListDoubly, Node } = require('./linkedListDoubly.todo');
+// const { LinkedListDoubly, Node } = require('./linkedListDoubly');
+const { LinkedListDoubly, Node } = require('./linkedListDoubly.todo');
 
 test('constructor', () => {
     let ll, nodes;
@@ -14,10 +14,19 @@ test('constructor', () => {
     expect(ll.head).toEqual(nodes[0])
     expect(ll.tail).toEqual(nodes[0])
 
-    nodes = [new Node(0), new Node(1)]
+    nodes = [new Node(0), new Node(1), new Node(2)]
     ll = new LinkedListDoubly(...nodes) 
+
     expect(ll.head).toEqual(nodes[0])
-    expect(ll.tail).toEqual(nodes[1])
+    expect(ll.head.next).toEqual(nodes[1])
+    expect(ll.head.prev).toEqual(null)
+
+    expect(ll.head.next.prev).toEqual(nodes[0])
+    expect(ll.head.next.next).toEqual(nodes[2])
+
+    expect(ll.tail).toEqual(nodes[2])
+    expect(ll.tail.prev).toEqual(nodes[1])
+    expect(ll.tail.next).toEqual(null)
 })
 
 test('insert', () => {

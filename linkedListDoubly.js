@@ -8,23 +8,14 @@ class Node {
 
 class LinkedListDoubly {
     constructor(...nodes) {
-        if (nodes.length === 0) {
-            this.head = null;
-            this.tail = null;
-        } else if (nodes.length === 1) {
-            this.head = nodes[0]
-            this.tail = nodes[0]
-        } else {
-            this.head = nodes[0];
-            let nodePrev = this.head;
-            let nodeCurr;
-            for(nodeCurr of nodes.slice(1)) {
-                nodePrev.next = nodeCurr;
-                nodeCurr.prev = nodePrev;
-                nodePrev = nodeCurr;
-            }
-            this.tail = nodeCurr;
+        this.head = nodes[0] || null;
+        let prevNode = this.head;
+        for (let node of nodes.slice(1)) {
+            prevNode.next = node;
+            node.prev = prevNode;
+            prevNode = node;
         }
+        this.tail = prevNode || null; 
     }
 
     push = (node) => {
@@ -60,46 +51,35 @@ class LinkedListDoubly {
     }
 
     insertAfter = (node, nodeInsertAfter) => {
-        // insert after tail
         if (nodeInsertAfter === this.tail) {
-            this.tail.next = node;
-            node.prev = this.tail;
-            this.tail = node;
+            this.append(node)
             return
         }
+        let nodePrev = nodeInsertAfter;
+        let nodeNext = nodeInsertAfter.next;
 
-        // insert in middle
-        // before: nodeInsertAfter <-> nodeNext
-        // after:  nodeInsertAfter <-> node <-> nodeNext
+        nodePrev.next = node;
+        node.prev = nodePrev;
 
-        let nodeNext = nodeInsertAfter.next; 
-        nodeNext.prev = node;
         node.next = nodeNext;
-
-        nodeInsertAfter.next = node;
-        node.prev = nodeInsertAfter;
+        nodeNext.prev = node;
 
     }
 
     insertBefore = (node, nodeInsertBefore) => {
-        // insert at head
         if (nodeInsertBefore === this.head) {
-            node.next = this.head;
-            this.head.prev = node;
-            this.head = node;
+            this.push(node)
             return
         }
 
-        // insert in middle/end
-        // before: nodePrev <-> nodeInsertBefore
-        // after:  nodePrev <-> node <-> nodeInsertBefore
-        
-        let nodePrev = nodeInsertBefore.prev; 
+        let nodePrev = nodeInsertBefore.prev;
+        let nodeNext = nodeInsertBefore;
+
         nodePrev.next = node;
         node.prev = nodePrev;
 
-        node.next = nodeInsertBefore;
-        nodeInsertBefore.prev = node;
+        node.next = nodeNext;
+        nodeNext.prev = node;
     }
 
     values = () => {

@@ -1,5 +1,5 @@
 class Node {
-    constructor(value, next) {
+    constructor() {
     }
 }
 
@@ -14,6 +14,9 @@ class LinkedList {
     }
 
     insert = (node, nodeInsertAt) => {
+    }
+
+    search = (value) => {
     }
 
     values = () => {

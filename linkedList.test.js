@@ -1,5 +1,5 @@
 const { LinkedList, Node } = require('./linkedList');
-// const { LinkedList, Node } = require('./linkedList.todo');
+// const { LinkedList, Node } = require('./linkedList.doing');
 
 test('empty', () => {
     let ll = new LinkedList() 
@@ -43,4 +43,12 @@ test('delete', () => {
 test('delete from empty', () => {
     let ll = new LinkedList();
     ll.delete(new Node(0))
+})
+
+test('search', () => {
+    let ll = new LinkedList();
+    expect(ll.search(2)).toEqual(undefined)
+    ll = new LinkedList(new Node(1), new Node(2), new Node(3))
+    expect(ll.search(1)).toEqual(ll.head)
+    expect(ll.search(2)).toEqual(ll.head.next)
 })

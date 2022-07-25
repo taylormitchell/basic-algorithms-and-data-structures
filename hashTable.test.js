@@ -1,5 +1,5 @@
-const { HashTable } = require('./hashTable');
-// const { LinkedList, Node } = require('./linkedList.doing');
+// const { HashTable } = require('./hashTable');
+const { HashTable } = require('./hashTable.doing');
 
 
 describe("set", () => {

@@ -1,5 +1,5 @@
 class Node {
-    constructor(value, prev=null, next=null) {
+    constructor() {
     }
 }
 

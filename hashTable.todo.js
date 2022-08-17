@@ -1,40 +1,21 @@
-/*
-* Hash Table
-*
-* Design and implement a hash table which uses chaining to handle collisions.
-*
-* The hash table should have the following functionality:
-*   - `set(key, value)`: sets the value for a given key. If a key already exists,
-*     it should be overwritten.
-*   - `get(key)`: returns the value for a given key. If the key does not exist,
-*     it should return null.
-*   - `delete(key)`: deletes the given key, if it exists.
-*   - `has(key)`: returns a boolean indicating whether or not the given key exists.
-*
-* The keys in your hash table should:
-*   - be unique.
-*   - be support strings or numbers
-*
-*/
+// https://github.com/donnemartin/system-design-primer/blob/master/solutions/object_oriented_design/hash_table/hash_map.ipynb
 
 class HashTable {
-    constructor(size=10) {
-    }
+  constructor() {}
 
-    hash(key) {
-    }
+  /**
+   * Generates the bucket index for a given key
+   * @param {string} key
+   */
+  hash(key) {}
 
-    set(key, value) {
-    }
+  set(key, value) {}
 
-    get(key) {
-    }
+  get(key) {}
 
-    delete(key) {
-    }
+  delete(key) {}
 
-    entries() {
-    }
+  entries() {}
 }
 
 module.exports = { HashTable };

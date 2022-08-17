@@ -1,14 +1,13 @@
 {
   "name": "basic-algorithms-and-data-structures",
   "version": "1.0.0",
-  "description": "",
-  "main": "linkedList.js",
+  "description": "A collection of javascript implementations of fundamental algorithms and data structures. Includes tests and blank templates that can be used to practice implementing yourself.",
+  "main": "README.md",
   "scripts": {
-    "test": "jest"
+    "doing": "node ./scripts/do.js",
+    "clear": "node ./scripts/clear.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "jest": "^28.1.1"
-  }
+  "license": "ISC"
 }

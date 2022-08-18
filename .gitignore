@@ -1,4 +1,3 @@
-*.todo.js
 node_modules
 .archive
 temp.*

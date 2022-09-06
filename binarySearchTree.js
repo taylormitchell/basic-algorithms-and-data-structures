@@ -1,109 +1,104 @@
 // BST
 class Node {
-  constructor(key, value = null, left = null, right = null) {
-    this.key = key;
+  constructor(value, key = null, left = null, right = null) {
     this.value = value;
+    this.key = key || value;
     this.left = left;
     this.right = right;
   }
 }
 
-function remove(key, root) {
-  if (!root) {
+function remove(root, key) {
+  if (root === null) {
     return null;
   }
-
-  // find node with key
+  // Drill down until we find the node
   if (key < root.key) {
-    root.left = remove(key, root.left);
+    root.left = remove(root.left, key);
+    return root;
   } else if (key > root.key) {
-    root.right = remove(key, root.right);
-  } else {
-    // At the node with the key. Removal approach depends on how
-    // many children it has:
-    if (root.left === null && root.right === null) {
-      // 0 children
-      return null;
-    } else if (root.left === null || root.right === null) {
-      // 1 child
-      return root.left || root.right;
-    } else {
-      // 2 children
-
-      // find successor and it's parent
-      let parent = root;
-      let successor = root.right;
-      while (successor.left) {
-        parent = successor;
-        successor = successor.left;
-      }
-
-      // remove successor from tree, add root children to it, and return
-      if (parent === root) {
-        /* Successor is directly to the right.
-            root <- parent
-            /   \
-         left   node <- successor
-               /     \
-              nil    right
-        */
-        successor.left = root.left;
-        return successor;
-      } else {
-        /* Successor is right and then down to far left side.
-               root
-              /   \
-                  node
-                 /     \
-               ...    right
-               /
-            node <- parent
-             /
-          node <- successor
-          /   \
-        nil   right
-        */
-        parent.left = successor.right;
-        successor.left = root.left;
-        successor.right = root.right;
-      }
-    }
+    root.right = remove(root.right, key);
+    return root;
   }
-  return root;
+
+  // 0 children - remove
+  if (root.left === null && root.right === null) {
+    return null;
+  }
+  // 1 child - return it
+  else if (root.left === null) {
+    return root.right;
+  } else if (root.right === null) {
+    return root.left;
+  }
+  // 2 children - return next node on right side
+  else {
+    /**
+     * Replace with the right child if it doesn't have a left subtree
+     *
+     *    root
+     *        \
+     *         nextNode
+     *         /     \
+     *       null    (...)
+     */
+    let nextNode = root.right;
+    if (nextNode.left === null) {
+      nextNode.left = root.left;
+      return nextNode;
+    }
+
+    /**
+     * Otherwise, replace with the left most node of the right subtree
+     *
+     *    root
+     *        \
+     *       root.right
+     *         /
+     *       ...
+     *       /
+     *    parentNode
+     *    /
+     *  nextNode
+     *  /    \
+     * null   (...)
+     */
+    let parentNode = root.right;
+    nextNode = root.right.left;
+    while (nextNode.left) {
+      parentNode = nextNode;
+      nextNode = nextNode.left;
+    }
+    parentNode.left = nextNode.right;
+    nextNode.left = root.left;
+    nextNode.right = root.right;
+    return nextNode;
+  }
 }
 
-function insert(node, root) {
+function insert(root, node) {
   if (!root) {
     return node;
   }
   if (node.key <= root.key) {
-    root.left = insert(node, root.left);
+    root.left = insert(root.left, node);
   } else {
-    root.right = insert(node, root.right);
+    root.right = insert(root.right, node);
   }
   return root;
 }
 
-function search(key, root) {
+function search(root, key) {
   if (!root) {
-    return;
-  } else if (key === root.key) {
+    return null;
+  }
+  if (key === root.key) {
     return root;
   } else if (key < root.key) {
-    return search(key, root.left);
+    return search(root.left, key);
   } else {
-    return search(key, root.right);
+    return search(root.right, key);
   }
-}
-
-function entries(node) {
-  let result = [];
-  inOrderTraversal(node, (n) => result.push([n.key, n.value]));
-  return result;
-}
-
-function keys(node) {
-  return entries(node).map((entry) => entry[0]);
 }
 
 // Helpers
@@ -111,15 +106,16 @@ function keys(node) {
 function simpleTree() {
   /*
             4
-          3   5
-        1  2    6
+          2   5
+        1  3    6
     */
-  let root = new Node(4);
-  root = insert(new Node(3), root);
-  root = insert(new Node(5), root);
-  root = insert(new Node(6), root);
-  root = insert(new Node(1), root);
-  root = insert(new Node(2), root);
+  let root = null;
+  root = insert(root, new Node(4));
+  root = insert(root, new Node(2));
+  root = insert(root, new Node(1));
+  root = insert(root, new Node(3));
+  root = insert(root, new Node(5));
+  root = insert(root, new Node(6));
   return root;
 }
 
@@ -229,13 +225,25 @@ function toString(root) {
   return lines.join("\n");
 }
 
+function toObject(root) {
+  if (!root) {
+    return null;
+  }
+  return {
+    key: root.key,
+    value: root.value,
+    left: toObject(root.left),
+    right: toObject(root.right),
+  };
+}
+
 module.exports = {
   Node,
   insert,
   remove,
   search,
-  keys,
   randomTree,
   simpleTree,
   toString,
+  toObject,
 };

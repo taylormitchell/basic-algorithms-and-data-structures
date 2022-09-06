@@ -9,30 +9,21 @@ function insert() {}
 
 function search() {}
 
-function entries(node) {
-  let result = [];
-  inOrderTraversal(node, (n) => result.push([n.key, n.value]));
-  return result;
-}
-
-function keys(node) {
-  return entries(node).map((entry) => entry[0]);
-}
-
 // Helpers
 
 function simpleTree() {
   /*
             4
-          3   5
-        1  2    6
+          2   5
+        1  3    6
     */
-  let root = new Node(4);
-  root = insert(new Node(3), root);
-  root = insert(new Node(5), root);
-  root = insert(new Node(6), root);
-  root = insert(new Node(1), root);
-  root = insert(new Node(2), root);
+  let root = null;
+  root = insert(root, new Node(4));
+  root = insert(root, new Node(2));
+  root = insert(root, new Node(1));
+  root = insert(root, new Node(3));
+  root = insert(root, new Node(5));
+  root = insert(root, new Node(6));
   return root;
 }
 
@@ -142,13 +133,25 @@ function toString(root) {
   return lines.join("\n");
 }
 
+function toObject(root) {
+  if (!root) {
+    return null;
+  }
+  return {
+    key: root.key,
+    value: root.value,
+    left: toObject(root.left),
+    right: toObject(root.right),
+  };
+}
+
 module.exports = {
   Node,
   insert,
   remove,
   search,
-  keys,
   randomTree,
   simpleTree,
   toString,
+  toObject,
 };

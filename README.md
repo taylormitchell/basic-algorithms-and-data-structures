@@ -8,3 +8,8 @@ How to use this for practice:
 - Replace `todo.js` with `doing.js`
 - Fill in the missing implementations
 - Run the test file ending in `test.js`
+
+## Todo
+
+- [ ] Finish parse.js
+- [x] done

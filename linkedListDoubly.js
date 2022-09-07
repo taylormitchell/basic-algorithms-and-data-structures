@@ -23,11 +23,13 @@ class LinkedListDoubly {
     return !this.head;
   };
 
+  /**Get value by index */
   get = (index) => {
     const node = this.getNodeByIndex(index);
     return node ? node.value : null;
   };
 
+  /**Insert value at head */
   push = (value) => {
     const node = new Node(value);
     if (!this.head) {
@@ -40,6 +42,7 @@ class LinkedListDoubly {
     }
   };
 
+  /**Insert value at tail */
   append = (value) => {
     const node = new Node(value);
     if (this.isEmpty()) {
@@ -52,6 +55,7 @@ class LinkedListDoubly {
     }
   };
 
+  /**Get node by value */
   getNodeByValue = (value) => {
     let node = this.head;
     while (node) {
@@ -63,6 +67,11 @@ class LinkedListDoubly {
     return null;
   };
 
+  /**
+   * Get node by index
+   * @param {number} index positive integer for forward indexing and negative integer for reverse indexing
+   * @returns
+   */
   getNodeByIndex = (index) => {
     if (index >= 0) {
       let i = 0;

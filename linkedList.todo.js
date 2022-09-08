@@ -3,15 +3,16 @@ class Node {
 }
 
 class LinkedList {
-  constructor(...nodes) {}
+  constructor(...values) {}
 
-  push = (node) => {};
+  push = (value) => {};
 
-  delete = (node) => {};
+  delete = (value) => {};
 
-  insert = (node, nodeInsertAt) => {};
+  /**Insert at index */
+  insert = (value, index) => {};
 
-  search = (value) => {};
+  has = (value) => {};
 
   values = () => {
     let result = [];

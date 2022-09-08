@@ -1,54 +1,60 @@
-const { LinkedList, Node } = require('./linkedList');
-// const { LinkedList, Node } = require('./linkedList.doing');
+// const { LinkedList } = require('./linkedList');
+const { LinkedList } = require("./linkedList.doing");
 
-test('empty', () => {
-    let ll = new LinkedList() 
-    expect(ll.head).toEqual(null)
-})
+test("constructor", () => {
+  let ll = new LinkedList();
+  expect(ll.head).toEqual(null);
 
-test('insert', () => {
-    let nodes = [new Node(1), new Node(3), new Node(4)] 
-    let ll = new LinkedList(...nodes) 
-    ll.insert(new Node(0), nodes[0])
-    expect(ll.values()).toEqual([0,1,3,4])
-    ll.insert(new Node(2), nodes[1])
-    expect(ll.values()).toEqual([0,1,2,3,4])
+  ll = new LinkedList(1, 2, 3);
+  expect(ll.values()).toEqual([1, 2, 3]);
 });
 
+test("insert", () => {
+  let values = [1, 3, 4];
+  let ll = new LinkedList(...values);
+  ll.insert(0, 0);
+  expect(ll.values()).toEqual([0, 1, 3, 4]);
+  ll.insert(2, 2);
+  expect(ll.values()).toEqual([0, 1, 2, 3, 4]);
+});
 
-test('push', () => {
-    let nodes = [new Node(1), new Node(2), new Node(3)] 
-    let ll = new LinkedList(...nodes) 
-    ll.push(new Node(0))
-    expect(ll.values()).toEqual([0,1,2,3])
-})
+test("push", () => {
+  let ll = new LinkedList(1, 2, 3);
+  ll.push(0);
+  expect(ll.values()).toEqual([0, 1, 2, 3]);
+});
 
-test('delete', () => {
-    let nodes = [new Node(1), new Node(2), new Node(3), new Node(4)] 
-    let ll = new LinkedList(...nodes) 
-    // delete head
-    ll.delete(nodes[0])
-    expect(ll.values()).toEqual([2,3,4])
-    // delete middle
-    ll.delete(nodes[2])
-    expect(ll.values()).toEqual([2,4])
-    // delete tail
-    ll.delete(nodes[3])
-    expect(ll.values()).toEqual([2])
-    // try deleting non-contained node
-    ll.delete(nodes[0])
-    expect(ll.values()).toEqual([2])
-})
+test("delete", () => {
+  let ll = new LinkedList(1, 2, 3, 4);
 
-test('delete from empty', () => {
-    let ll = new LinkedList();
-    ll.delete(new Node(0))
-})
+  // delete head
+  ll.delete(1);
+  expect(ll.values()).toEqual([2, 3, 4]);
 
-test('search', () => {
-    let ll = new LinkedList();
-    expect(ll.search(2)).toEqual(undefined)
-    ll = new LinkedList(new Node(1), new Node(2), new Node(3))
-    expect(ll.search(1)).toEqual(ll.head)
-    expect(ll.search(2)).toEqual(ll.head.next)
-})
+  // delete middle
+  ll.delete(3);
+  expect(ll.values()).toEqual([2, 4]);
+
+  // delete tail
+  ll.delete(4);
+  expect(ll.values()).toEqual([2]);
+
+  // try deleting non-contained node
+  expect(ll.delete(0)).toEqual(false);
+  expect(ll.values()).toEqual([2]);
+});
+
+test("delete from empty", () => {
+  let ll = new LinkedList();
+  expect(ll.delete(0)).toEqual(false);
+});
+
+test("has", () => {
+  let ll = new LinkedList();
+  expect(ll.has(2)).toEqual(false);
+  ll = new LinkedList(1, 2, 3);
+  expect(ll.has(1)).toEqual(true);
+  expect(ll.has(2)).toEqual(true);
+  expect(ll.has(3)).toEqual(true);
+  expect(ll.has(4)).toEqual(false);
+});

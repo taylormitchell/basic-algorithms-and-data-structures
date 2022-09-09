@@ -8,74 +8,6 @@ class Node {
   }
 }
 
-function remove(root, key) {
-  if (root === null) {
-    return null;
-  }
-  // Drill down until we find the node
-  if (key < root.key) {
-    root.left = remove(root.left, key);
-    return root;
-  } else if (key > root.key) {
-    root.right = remove(root.right, key);
-    return root;
-  }
-
-  // 0 children - remove
-  if (root.left === null && root.right === null) {
-    return null;
-  }
-  // 1 child - return it
-  else if (root.left === null) {
-    return root.right;
-  } else if (root.right === null) {
-    return root.left;
-  }
-  // 2 children - return next node on right side
-  else {
-    /**
-     * Replace with the right child if it doesn't have a left subtree
-     *
-     *    root
-     *        \
-     *         nextNode
-     *         /     \
-     *       null    (...)
-     */
-    let nextNode = root.right;
-    if (nextNode.left === null) {
-      nextNode.left = root.left;
-      return nextNode;
-    }
-
-    /**
-     * Otherwise, replace with the left most node of the right subtree
-     *
-     *    root
-     *        \
-     *       root.right
-     *         /
-     *       ...
-     *       /
-     *    parentNode
-     *    /
-     *  nextNode
-     *  /    \
-     * null   (...)
-     */
-    let parentNode = root.right;
-    nextNode = root.right.left;
-    while (nextNode.left) {
-      parentNode = nextNode;
-      nextNode = nextNode.left;
-    }
-    parentNode.left = nextNode.right;
-    nextNode.left = root.left;
-    nextNode.right = root.right;
-    return nextNode;
-  }
-}
-
 function insert(root, node) {
   if (!root) {
     return node;
@@ -98,6 +30,87 @@ function search(root, key) {
     return search(root.left, key);
   } else {
     return search(root.right, key);
+  }
+}
+
+function remove(root, key) {
+  if (!root) {
+    return false;
+  }
+
+  if (root.key === key) {
+    // Now that we have the matching node, we need to find
+    // a suitable node to replace it in the tree.
+
+    /**
+    * If the node only has one child, then replace it
+    * with it's other child
+       
+    *    root
+    *   /    \
+    * null    node
+    *        /    \
+    *     (...)   (...)
+    */
+    if (root.left === null) {
+      return root.right;
+    } else if (root.right === null) {
+      return root.left;
+    } else {
+      // Otherwise it has 2 children, in which case we'll replace it
+      // with the next-largest node from it's right subtree
+      let nextNode;
+
+      /**
+       * If the right child doesn't have a left sub-tree,
+       * then it's the next largest node.
+       *    root
+       *        \
+       *         nextNode
+       *         /     \
+       *       null    (...)
+       */
+      nextNode = root.right;
+      if (nextNode.left === null) {
+        nextNode.left = root.left;
+        return nextNode;
+      } else {
+        /**
+         * Otherwise we need to drill down to the far left leaf node
+         *
+         *    root
+         *        \
+         *       root.right
+         *         /
+         *       ...
+         *       /
+         *    parentNode
+         *    /
+         *  nextNode
+         *  /    \
+         * null   (...)
+         */
+        let parentNode;
+        while (nextNode.left) {
+          parentNode = nextNode;
+          nextNode = nextNode.left;
+        }
+        // replace nextNode with it's own children
+        parentNode.left = nextNode.right;
+        // then sub nextNode
+        nextNode.left = root.left;
+        nextNode.right = root.right;
+        return nextNode;
+      }
+    }
+  }
+  // Otherwise, keep drilling down to find matching node
+  else if (root.key > key) {
+    root.left = remove(root.left, key);
+    return root;
+  } else {
+    root.right = remove(root.right, key);
+    return root;
   }
 }
 
@@ -237,6 +250,22 @@ function toObject(root) {
   };
 }
 
+function fromObject(obj) {
+  if (!obj) {
+    return null;
+  }
+  let root = new Node(obj.key, obj.value);
+  if (obj.left && obj.left.key > root.key) {
+    throw new Error("Invalid left child");
+  }
+  root.left = fromObject(obj.left);
+  if (obj.right && obj.right.key < root.key) {
+    throw new Error("Invalid right child");
+  }
+  root.right = fromObject(obj.right);
+  return root;
+}
+
 module.exports = {
   Node,
   insert,
@@ -246,4 +275,5 @@ module.exports = {
   simpleTree,
   toString,
   toObject,
+  fromObject,
 };

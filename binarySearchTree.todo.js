@@ -3,11 +3,11 @@ class Node {
   constructor() {}
 }
 
-function remove() {}
+function insert(root, node) {}
 
-function insert() {}
+function search(root, key) {}
 
-function search() {}
+function remove(root, key) {}
 
 // Helpers
 

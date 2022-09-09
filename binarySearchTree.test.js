@@ -98,9 +98,49 @@ describe("binarySearchTree", () => {
    *        /   \
    *     left   node <- successor
    *           /     \
-   *          nil    right
+   *          null    right
    */
-  test("remove - 2 children - successor right", () => {});
+  test("remove - 2 children - successor right", () => {
+    const root = bst.fromObject({
+      key: 3,
+      value: 3,
+      left: {
+        key: 2,
+        value: 2,
+        left: null,
+        right: null,
+      },
+      right: {
+        key: 4,
+        value: 4,
+        left: null,
+        right: {
+          key: 5,
+          value: 5,
+          left: null,
+          right: null,
+        },
+      },
+    });
+    const actual = bst.toObject(remove(root, 4));
+    const expected = {
+      key: 3,
+      value: 3,
+      left: {
+        key: 2,
+        value: 2,
+        left: null,
+        right: null,
+      },
+      right: {
+        key: 5,
+        value: 5,
+        left: null,
+        right: null,
+      },
+    };
+    expect(actual).toEqual(expected);
+  });
 
   /**
    * @todo

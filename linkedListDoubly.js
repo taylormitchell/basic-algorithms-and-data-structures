@@ -10,8 +10,8 @@ class LinkedListDoubly {
   constructor(...values) {
     this.head = values.length > 0 ? new Node(values[0]) : null;
     let prevNode = this.head;
-    for (const value of values.slice(1)) {
-      const currNode = new Node(value);
+    for (let i = 1; i < values.length; i++) {
+      const currNode = new Node(values[i], prevNode);
       prevNode.next = currNode;
       currNode.prev = prevNode;
       prevNode = currNode;
@@ -53,6 +53,20 @@ class LinkedListDoubly {
       node.prev = this.tail;
       this.tail = node;
     }
+  };
+
+  shift = () => {
+    if (this.head === null) {
+      return null;
+    }
+    const value = this.head.value;
+    this.head = this.head.next;
+    if (this.head) {
+      this.head.prev = null;
+    } else {
+      this.tail = null;
+    }
+    return value;
   };
 
   /**Get node by value */

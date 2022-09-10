@@ -100,6 +100,15 @@ class LinkedList {
     }
     return result;
   };
+
+  shift = () => {
+    if (!this.head) {
+      return null;
+    }
+    let value = this.head.value;
+    this.head = this.head.next;
+    return value;
+  };
 }
 
 module.exports = { LinkedList, Node };

@@ -1,14 +1,9 @@
 class Node {
-  constructor() {}
+  constructor(value, next = null, prev = null) {}
 }
 
 class LinkedListDoubly {
   constructor(...values) {}
-
-  isEmpty = () => {};
-
-  /**Get value by index */
-  get = (index) => {};
 
   /**Insert value at head */
   push = (value) => {};
@@ -16,17 +11,15 @@ class LinkedListDoubly {
   /**Insert value at tail */
   append = (value) => {};
 
-  /**Get node by value */
-  getNodeByValue = (value) => {};
+  /**Remove head and return it's value */
+  shift = () => {};
 
   /**
    * Get node by index
-   * @param {number} index positive integer for forward indexing and negative integer for reverse indexing
+   * @param {number} index positive integer
    * @returns
    */
   getNodeByIndex = (index) => {};
-
-  delete = (value) => {};
 
   /**Insert value after index */
   insertAfter = (value, index) => {};
@@ -34,25 +27,24 @@ class LinkedListDoubly {
   /**Insert value before index */
   insertBefore = (value, index) => {};
 
-  values = () => {
-    let result = [];
-    let node = this.head;
-    while (node) {
-      result.push(node.value);
-      node = node.next;
-    }
-    return result;
-  };
+  /**Get node by value */
+  getNodeByValue = (value) => {};
 
-  valuesReverse = () => {
-    let result = [];
-    let node = this.tail;
-    while (node) {
-      result.push(node.value);
-      node = node.prev;
-    }
-    return result;
-  };
+  /**Get value by index */
+  get = (index) => {};
+
+  /**
+   *
+   * @param {*} node node must be in the linked list
+   * @returns
+   */
+  deleteNode = (node) => {};
+
+  delete = (value) => {};
+
+  values = () => {};
+
+  valuesReverse = () => {};
 }
 
 module.exports = { LinkedListDoubly, Node };

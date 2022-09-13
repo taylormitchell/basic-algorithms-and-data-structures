@@ -1,9 +1,14 @@
 const acorn = require("acorn");
 const fs = require("fs");
 
-const js = fs.readFileSync("./linkedListDoubly.js", "utf8");
+const sourcepath = process.argv[2];
+if (!sourcepath) {
+  console.log("No sourcepath given");
+  process.exit(1);
+}
 
-let ast = acorn.parse(js, { ecmaVersion: "latest" });
+const source = fs.readFileSync(sourcepath, "utf8");
+let ast = acorn.parse(source, { ecmaVersion: "latest" });
 
 function findFunctionBodyLocs(root) {
   let children;
@@ -28,12 +33,13 @@ function findFunctionBodyLocs(root) {
   return result;
 }
 
-let locs = findFunctionBodyLocs(ast);
-let searchValues = locs.map((loc) => js.slice(loc.start, loc.end));
+let bodyLocs = findFunctionBodyLocs(ast);
+let bodyContents = bodyLocs.map((loc) => source.slice(loc.start, loc.end));
 
-let jsTodo = js;
-for (let searchValue of searchValues) {
-  jsTodo = jsTodo.replace(searchValue, "{}");
+let sourceTodo = source;
+for (let searchValue of bodyContents) {
+  sourceTodo = sourceTodo.replace(searchValue, "{}");
 }
 
-console.log(jsTodo);
+const sourceTodoPath = sourcepath.replace(/\.js$/, ".todo.js");
+fs.writeFileSync(sourceTodoPath, sourceTodo);

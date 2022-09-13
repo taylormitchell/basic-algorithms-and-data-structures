@@ -1,7 +1,11 @@
-// const { LinkedListDoubly, Node } = require('./linkedListDoubly');
-const { LinkedListDoubly } = require("./linkedListDoubly.doing");
+let LinkedListDoubly;
 
-describe("LinkedListDoubly", () => {
+describe.each(["./linkedListDoubly.todo", "./linkedListDoubly"])("%s", (filename) => {
+  beforeAll(() => {
+    const { LinkedListDoubly: cls } = require(filename);
+    LinkedListDoubly = cls;
+  });
+
   test("constructor", () => {
     let ll, values;
 
@@ -13,7 +17,6 @@ describe("LinkedListDoubly", () => {
     values = [0];
     ll = new LinkedListDoubly(...values);
     expect(ll.get(0)).toEqual(values[0]);
-    expect(ll.get(-1)).toEqual(values[0]);
 
     values = [0, 1, 2];
     ll = new LinkedListDoubly(...values);

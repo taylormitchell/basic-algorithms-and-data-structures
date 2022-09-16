@@ -1,7 +1,8 @@
 const acorn = require("acorn");
 const fs = require("fs");
 
-const sourcepath = process.argv[2];
+// const sourcepath = process.argv[2];
+const sourcepath = "binarySearchTree.js";
 if (!sourcepath) {
   console.log("No sourcepath given");
   process.exit(1);
@@ -24,7 +25,9 @@ function findFunctionBodyLocs(root) {
 
   result = [];
   for (let node of children) {
-    if (node.type === "FunctionExpression" || node.type === "ArrowFunctionExpression") {
+    if (
+      ["FunctionDeclaration", "FunctionExpression", "ArrowFunctionExpressiong"].includes(node.type)
+    ) {
       result.push({ start: node.body.start, end: node.body.end });
     } else {
       result = result.concat(findFunctionBodyLocs(node));

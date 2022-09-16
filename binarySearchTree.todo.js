@@ -1,13 +1,77 @@
 // BST
 class Node {
-  constructor() {}
+  constructor(value, key = null, left = null, right = null) {
+    this.value = value;
+    this.key = key || value;
+    this.left = left;
+    this.right = right;
+  }
 }
 
-function insert(root, node) {}
+function insert(root, node) {
+  if (!root) {
+    return node;
+  } else if (node.key <= root.key) {
+    root.left = insert(root.left, node);
+    return root;
+  } else {
+    root.right = insert(root.right, node);
+    return root;
+  }
+}
 
-function search(root, key) {}
+function search(root, key) {
+  if (!root) {
+    return null;
+  } else if (key === root.key) {
+    return root;
+  } else if (key < root.key) {
+    return search(root.left, key);
+  } else {
+    return search(root.right, key);
+  }
+}
 
-function remove(root, key) {}
+function remove(root, key) {
+  if (!root) {
+    return null;
+  }
+  // Recurse down until we find the node
+  else if (key < root.key) {
+    root.left = remove(root.left, key);
+    return root;
+  } else if (key > root.key) {
+    root.right = remove(root.right, key);
+    return root;
+  }
+  // Found the node
+  else {
+    // find next node to replace the removed node with in the tree
+    if (!root.left) {
+      return root.right;
+    } else if (!root.right) {
+      return root.left;
+    } else if (root.right.left === null) {
+      // the next node is the top node in the right subtree
+      let nextNode = root.right;
+      nextNode.left = root.left;
+      return nextNode;
+    } else {
+      // the next node is the left most node in the right subtree
+      let parentNode = root.right;
+      let nextNode = root.left;
+      while (nextNode.left) {
+        parentNode = nextNode;
+        nextNode = nextNode.left;
+      }
+
+      parentNode.left = nextNode.right;
+      nextNode.left = root.left;
+      nextNode.right = root.right;
+      return nextNode;
+    }
+  }
+}
 
 // Helpers
 
@@ -145,6 +209,22 @@ function toObject(root) {
   };
 }
 
+function fromObject(obj) {
+  if (!obj) {
+    return null;
+  }
+  let root = new Node(obj.key, obj.value);
+  if (obj.left && obj.left.key > root.key) {
+    throw new Error("Invalid left child");
+  }
+  root.left = fromObject(obj.left);
+  if (obj.right && obj.right.key < root.key) {
+    throw new Error("Invalid right child");
+  }
+  root.right = fromObject(obj.right);
+  return root;
+}
+
 module.exports = {
   Node,
   insert,
@@ -154,4 +234,5 @@ module.exports = {
   simpleTree,
   toString,
   toObject,
+  fromObject,
 };

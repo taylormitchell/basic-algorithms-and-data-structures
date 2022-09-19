@@ -52,23 +52,24 @@ class QueueWithObject {
 }
 
 class QueueWithLinkedList {
-  constructor(data = []) {
-    this.data = new LinkedListDoubly();
-    for (let item of data) {
-      this.enqueue(item);
-    }
+  constructor(...items) {
+    this.linkedList = new LinkedListDoubly(...items);
   }
 
   enqueue(item) {
-    this.data.append(item);
+    this.linkedList.append(item);
   }
 
   dequeue() {
-    return this.data.shift();
+    return this.linkedList.shift();
   }
 
-  peek() {
-    return this.data.head;
+  peak() {
+    return this.linkedList.get(0);
+  }
+
+  values() {
+    return this.linkedList.values();
   }
 }
 

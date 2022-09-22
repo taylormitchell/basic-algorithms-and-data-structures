@@ -1,8 +1,7 @@
 const acorn = require("acorn");
 const fs = require("fs");
 
-// const sourcepath = process.argv[2];
-const sourcepath = "binarySearchTree.js";
+const sourcepath = process.argv[2];
 if (!sourcepath) {
   console.log("No sourcepath given");
   process.exit(1);

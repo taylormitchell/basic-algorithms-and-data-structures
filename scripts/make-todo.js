@@ -25,7 +25,7 @@ function findFunctionBodyLocs(root) {
   result = [];
   for (let node of children) {
     if (
-      ["FunctionDeclaration", "FunctionExpression", "ArrowFunctionExpressiong"].includes(node.type)
+      ["FunctionDeclaration", "FunctionExpression", "ArrowFunctionExpression"].includes(node.type)
     ) {
       result.push({ start: node.body.start, end: node.body.end });
     } else {

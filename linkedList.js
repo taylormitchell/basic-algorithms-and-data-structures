@@ -18,12 +18,8 @@ class LinkedList {
 
   push = (value) => {
     const node = new Node(value);
-    if (!this.head) {
-      this.head = node;
-    } else {
-      node.next = this.head;
-      this.head = node;
-    }
+    node.next = this.head;
+    this.head = node;
   };
 
   delete = (value) => {
@@ -89,6 +85,7 @@ class LinkedList {
     }
     return false;
   };
+
   search = (value) => {};
 
   values = () => {

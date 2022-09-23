@@ -1,5 +1,5 @@
 class Node {
-  constructor() {}
+  constructor(value, next) {}
 }
 
 class LinkedList {
@@ -9,20 +9,21 @@ class LinkedList {
 
   delete = (value) => {};
 
-  /**Insert at index */
+  /**
+   * Insert at index
+   * @param {*} value
+   * @param {*} index
+   * @returns
+   */
   insert = (value, index) => {};
 
   has = (value) => {};
 
-  values = () => {
-    let result = [];
-    let node = this.head;
-    while (node) {
-      result.push(node.value);
-      node = node.next;
-    }
-    return result;
-  };
+  search = (value) => {};
+
+  values = () => {};
+
+  shift = () => {};
 }
 
 module.exports = { LinkedList, Node };

@@ -1,25 +1,15 @@
 const { LinkedListDoubly } = require("./linkedListDoubly");
 
 class Queue {
-  constructor(...items) {
-    this.linkedList = new LinkedListDoubly(...items);
-  }
+  constructor(...items) {}
 
-  enqueue(item) {
-    this.linkedList.append(item);
-  }
+  enqueue(item) {}
 
-  dequeue() {
-    return this.linkedList.shift();
-  }
+  dequeue() {}
 
-  peak() {
-    return this.linkedList.get(0);
-  }
+  peak() {}
 
-  values() {
-    return this.linkedList.values();
-  }
+  values() {}
 }
 
 module.exports = {

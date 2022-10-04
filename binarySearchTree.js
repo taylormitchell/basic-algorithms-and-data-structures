@@ -43,7 +43,7 @@ function remove(root, key) {
     // a suitable node to replace it in the tree.
 
     /**
-    * If the node only has one child, then replace it
+    * If the node 0 or 1 child, then replace it
     * with it's other child
        
     *    root

@@ -35,7 +35,7 @@ function search(root, key) {
 
 function remove(root, key) {
   if (!root) {
-    return false;
+    return null;
   }
 
   if (root.key === key) {
@@ -43,7 +43,7 @@ function remove(root, key) {
     // a suitable node to replace it in the tree.
 
     /**
-    * If the node 0 or 1 child, then replace it
+    * If the node has 0 or 1 children, then replace it
     * with it's other child
        
     *    root
@@ -104,24 +104,28 @@ function remove(root, key) {
       }
     }
   }
-  // Otherwise, keep drilling down to find matching node
-  else if (root.key > key) {
-    root.left = remove(root.left, key);
-    return root;
-  } else {
-    root.right = remove(root.right, key);
+  else {
+    // Otherwise, keep drilling down to find matching node
+    if (root.key > key) {
+      root.left = remove(root.left, key);
+    } else {
+      root.right = remove(root.right, key);
+    }
     return root;
   }
 }
 
 // Helpers
 
+/**
+ * ```
+ *      4
+ *    2   5
+ *  1  3    6
+ * ```
+ * @returns 
+ */
 function simpleTree() {
-  /*
-            4
-          2   5
-        1  3    6
-    */
   let root = null;
   root = insert(root, new Node(4));
   root = insert(root, new Node(2));

@@ -11,13 +11,16 @@
  */
 class MinHeap {
   constructor(...values) {
-    this.values = [];
-    values.forEach((v) => this.insert(v));
+    this.values = values;
+    if (!this.isHeap()) {
+      this.values = [];
+      values.forEach((v) => this.insert(v));
+    }
   }
 
   insert(value) {
     this.values.push(value);
-    this.bubbleDown(0);
+    this.bubbleUp();
   }
 
   pop() {
@@ -26,7 +29,7 @@ class MinHeap {
     }
     this.swap(0, this.values.length - 1);
     const minValue = this.values.pop();
-    this.bubbleUp(this.values.length - 1);
+    this.bubbleDown();
     return minValue;
   }
 
@@ -37,10 +40,10 @@ class MinHeap {
   }
 
   getParentIndex(i) {
-    if (i === 0) {
+    if (i <= 0) {
       return null;
     }
-    return Math.floor(i - 1 / 2);
+    return Math.floor((i - 1) / 2);
   }
 
   getChildIndices(i) {
@@ -52,23 +55,44 @@ class MinHeap {
   }
 
   bubbleUp(i) {
-    i_parent = this.getParentIndex(i);
-    if (this.values[i_parent] <= this.values[i]) {
+    if (!(i > 0 && i < this.values.length)) {
+      i = this.values.length - 1;
+    }
+    const i_parent = this.getParentIndex(i);
+    if (i_parent === null || this.values[i_parent] <= this.values[i]) {
       return;
     }
     this.swap(i, i_parent);
-    return bubbleUp(i_parent);
+    return this.bubbleUp(i_parent);
   }
 
   bubbleDown(i) {
+    if (!(i > 0 && i < this.values.length)) {
+      i = 0;
+    }
     const [i_left, i_right] = this.getChildIndices(i);
-    if (i_left && this.values[i] < this.values[i_left]) {
+    if (i_left && this.values[i] > this.values[i_left]) {
       this.swap(i, i_left);
-      bubbleDown(i_left);
-    } else if (i_right && this.values[i] < this.values[i_right]) {
+      this.bubbleDown(i_left);
+    } else if (i_right && this.values[i] > this.values[i_right]) {
       this.swap(i, i_right);
-      bubbleDown(i_right);
+      this.bubbleDown(i_right);
     }
     return;
   }
+
+  isHeap() {
+    return this.values.every((v, i) => {
+      const [i_left, i_right] = this.getChildIndices(i);
+      if (i_left && this.values[i_left] < v) {
+        return false;
+      }
+      if (i_right && this.values[i_right] < v) {
+        return false;
+      }
+      return true;
+    });
+  }
 }
+
+module.exports = { MinHeap };

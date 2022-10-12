@@ -11,11 +11,7 @@
  */
 class MinHeap {
   constructor(...values) {
-    this.values = values;
-    if (!this.isHeap()) {
-      this.values = [];
-      values.forEach((v) => this.insert(v));
-    }
+    this.values = buildMinHeap(values);
   }
 
   insert(value) {
@@ -27,16 +23,10 @@ class MinHeap {
     if (!this.values) {
       return undefined;
     }
-    this.swap(0, this.values.length - 1);
+    swap(this.values, 0, this.values.length - 1);
     const minValue = this.values.pop();
     this.bubbleDown();
     return minValue;
-  }
-
-  swap(i, j) {
-    const value = this.values[i];
-    this.values[i] = this.values[j];
-    this.values[j] = value;
   }
 
   getParentIndex(i) {
@@ -62,7 +52,7 @@ class MinHeap {
     if (i_parent === null || this.values[i_parent] <= this.values[i]) {
       return;
     }
-    this.swap(i, i_parent);
+    swap(this.values, i, i_parent);
     return this.bubbleUp(i_parent);
   }
 
@@ -72,10 +62,10 @@ class MinHeap {
     }
     const [i_left, i_right] = this.getChildIndices(i);
     if (i_left && this.values[i] > this.values[i_left]) {
-      this.swap(i, i_left);
+      swap(this.values, i, i_left);
       this.bubbleDown(i_left);
     } else if (i_right && this.values[i] > this.values[i_right]) {
-      this.swap(i, i_right);
+      swap(this.values, i, i_right);
       this.bubbleDown(i_right);
     }
     return;
@@ -92,6 +82,41 @@ class MinHeap {
       }
       return true;
     });
+  }
+}
+
+function buildMinHeap(arr) {
+  const lastParent = Math.floor((arr.length - 1) / 2);
+  for (i = lastParent; i >= 0; i--) {
+    minHeapify(arr, i);
+  }
+  return arr;
+}
+
+function swap(arr, i, j) {
+  const v = arr[i];
+  arr[i] = arr[j];
+  arr[j] = v;
+  return arr;
+}
+
+function minHeapify(arr, i_parent) {
+  const i_left = 2 * i_parent + 1;
+  const i_right = 2 * i_parent + 2;
+
+  // find largest of parents and children
+
+  let i_smallest = i_parent;
+  if (arr[i_left] < arr[i_parent]) {
+    i_smallest = i_left;
+  }
+  if (arr[i_right < arr[i_parent]]) {
+    i_smallest = i_right;
+  }
+
+  if (i_smallest !== i_parent) {
+    swap(arr, i_smallest, i_parent);
+    minHeapify(arr, i_smallest);
   }
 }
 

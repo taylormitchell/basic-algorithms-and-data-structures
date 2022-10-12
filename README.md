@@ -11,10 +11,6 @@ How to use this for practice:
 
 ## Todo
 
-- [ ] finish `heap.test.js`
-- [ ] find if there are fast buildHeap and heapSort algorithms, then implement if so
-  - https://www.geeksforgeeks.org/building-heap-from-array/
-  - https://en.wikipedia.org/wiki/Heapsort
 - [ ] ankify the big-O for heaps
 
 ### maybe/later

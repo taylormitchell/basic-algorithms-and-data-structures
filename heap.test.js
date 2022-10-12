@@ -26,38 +26,28 @@ describe.each([
     expect(heap.values).toEqual([0, 1, 3, 2, 4]);
   });
 
-  test("pop", () => {
-    let values, heap;
+  describe("pop", () => {
+    test("empty", () => {
+      const heap = new MinHeap();
+      expect(heap.pop()).toBeUndefined();
+    });
 
-    // pop and bubble down to left only
+    test("bubble down to left only", () => {
+      const values = [1, 2, 3, 4, 5, 6, 7];
+      const heap = new MinHeap(...values);
+      expect(heap.values).toEqual(values);
 
-    values = [1, 2, 3, 4, 5, 6, 7];
-    heap = new MinHeap(...values);
-    expect(heap.values).toEqual(values);
+      expect(heap.pop()).toEqual(1);
+      expect(heap.values).toEqual([2, 4, 3, 7, 5, 6]);
+    });
 
-    expect(heap.pop()).toEqual(1);
-    expect(heap.values).toEqual([2, 4, 3, 7, 5, 6]);
+    test("bubble down to right then left", () => {
+      const values = [1, 8, 4, 9, 10, 5, 6];
+      const heap = new MinHeap(...values);
+      expect(heap.values).toEqual(values);
 
-    // pop and bubble down to right then left
-
-    values = [1, 8, 4, 9, 10, 5, 6];
-    heap = new MinHeap(...values);
-    expect(heap.values).toEqual(values);
-
-    expect(heap.pop()).toEqual(1);
-    expect(heap.values).toEqual([4, 8, 5, 9, 10, 6]);
+      expect(heap.pop()).toEqual(1);
+      expect(heap.values).toEqual([4, 8, 5, 9, 10, 6]);
+    });
   });
-
-  // describe("delete", () => {
-  //   test("should delete a value", () => {
-  //     let hashTable = new HashTable();
-  //     hashTable.set("a", 1);
-  //     hashTable.delete("a");
-  //     expect(hashTable.get("a")).toEqual(null);
-  //   });
-  //   test("should return false when missing a value", () => {
-  //     let hashTable = new HashTable();
-  //     expect(hashTable.delete("a")).toEqual(false);
-  //   });
-  // });
 });

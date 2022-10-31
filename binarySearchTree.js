@@ -1,3 +1,4 @@
+const { randomInt } = require("./util");
 // BST
 class Node {
   constructor(value, key = null, left = null, right = null) {
@@ -103,8 +104,7 @@ function remove(root, key) {
         return nextNode;
       }
     }
-  }
-  else {
+  } else {
     // Otherwise, keep drilling down to find matching node
     if (root.key > key) {
       root.left = remove(root.left, key);
@@ -123,7 +123,7 @@ function remove(root, key) {
  *    2   5
  *  1  3    6
  * ```
- * @returns 
+ * @returns
  */
 function simpleTree() {
   let root = null;
@@ -136,37 +136,39 @@ function simpleTree() {
   return root;
 }
 
-function randomTree(size = 10, max = 100) {
-  function randomInt() {
-    return Math.floor(Math.random() * max);
-  }
+function randomTree(size = 10, min = 0, max = 100) {
   if (size <= 0) {
     return null;
   }
-  let root = new Node(randomInt());
+  let root = new Node(randomInt(min, max));
   for (let i = 1; i < size; i++) {
-    insert(new Node(randomInt()), root);
+    insert(root, new Node(randomInt(min, max)));
   }
   return root;
 }
 
+/**
+ * Convery a tree to a string representation
+ *
+ * Example output:
+ *
+ * ```
+ *        20134534534
+ *   ┌─────────┴──┐
+ *   46           83
+ * ┌─┴─┐        ┌─┴─┐
+ * 45  50       71  86
+ *    ┌┴─┐
+ *       53
+ *      ┌┴─┐
+ *         58
+ *        ┌┴─┐
+ *           63
+ * ```
+ *
+ * @reference https://www.w3.org/TR/xml-entity-names/025.html
+ */
 function toString(root) {
-  /*
-         20134534534                     
-    ┌─────────┴──┐
-    46           83  
-  ┌─┴─┐        ┌─┴─┐
-  45  50       71  86
-     ┌┴─┐
-        53            
-       ┌┴─┐
-          58          
-         ┌┴─┐
-            63    
-  
-  
-      https://www.w3.org/TR/xml-entity-names/025.html
-  */
   function toStringArray(root) {
     if (!root) {
       return [[" "], 0];

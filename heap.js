@@ -11,7 +11,7 @@
  */
 class MinHeap {
   constructor(...values) {
-    this.values = buildMinHeap(values);
+    this.values = minHeapifyArray(values);
   }
 
   insert(value) {
@@ -29,26 +29,11 @@ class MinHeap {
     return minValue;
   }
 
-  getParentIndex(i) {
-    if (i <= 0) {
-      return null;
-    }
-    return Math.floor((i - 1) / 2);
-  }
-
-  getChildIndices(i) {
-    let i_left = 2 * i + 1;
-    let i_right = i_left + 1;
-    i_left = this.values[i_left] ? i_left : null;
-    i_right = this.values[i_right] ? i_right : null;
-    return [i_left, i_right];
-  }
-
   bubbleUp(i) {
     if (!(i > 0 && i < this.values.length)) {
       i = this.values.length - 1;
     }
-    const i_parent = this.getParentIndex(i);
+    const i_parent = getParentIndex(i);
     if (i_parent === null || this.values[i_parent] <= this.values[i]) {
       return;
     }
@@ -60,38 +45,29 @@ class MinHeap {
     if (!(i > 0 && i < this.values.length)) {
       i = 0;
     }
-    const [i_left, i_right] = this.getChildIndices(i);
-    if (i_left && this.values[i] > this.values[i_left]) {
+    const [i_left, i_right] = getChildIndices(i);
+    if (this.values[i] > this.values[i_left]) {
       swap(this.values, i, i_left);
       this.bubbleDown(i_left);
-    } else if (i_right && this.values[i] > this.values[i_right]) {
+    } else if (this.values[i] > this.values[i_right]) {
       swap(this.values, i, i_right);
       this.bubbleDown(i_right);
     }
     return;
   }
-
-  isHeap() {
-    return this.values.every((v, i) => {
-      const [i_left, i_right] = this.getChildIndices(i);
-      if (i_left && this.values[i_left] < v) {
-        return false;
-      }
-      if (i_right && this.values[i_right] < v) {
-        return false;
-      }
-      return true;
-    });
-  }
 }
 
-function buildMinHeap(arr) {
-  const lastParent = Math.floor((arr.length - 1) / 2);
+function minHeapifyArray(arr) {
+  const lastChild = arr.length - 1;
+  const lastParent = getParentIndex(lastChild);
   for (i = lastParent; i >= 0; i--) {
-    minHeapify(arr, i);
+    minHeapifyUp(arr, i);
   }
   return arr;
 }
+
+const getParentIndex = (i) => (i > 0 ? Math.floor((i - 1) / 2) : null);
+const getChildIndices = (i) => [2 * i + 1, 2 * i + 2];
 
 function swap(arr, i, j) {
   const v = arr[i];
@@ -100,12 +76,13 @@ function swap(arr, i, j) {
   return arr;
 }
 
-function minHeapify(arr, i_parent) {
-  const i_left = 2 * i_parent + 1;
-  const i_right = 2 * i_parent + 2;
+function minHeapifyUp(arr, i_parent) {
+  if (!arr[i_parent]) {
+    return;
+  }
+  const [i_left, i_right] = getChildIndices(i_parent);
 
-  // find largest of parents and children
-
+  // find smallest of parents and children
   let i_smallest = i_parent;
   if (arr[i_left] < arr[i_parent]) {
     i_smallest = i_left;
@@ -114,10 +91,24 @@ function minHeapify(arr, i_parent) {
     i_smallest = i_right;
   }
 
+  // if smallest is not parent, swap and recurse down the tree
   if (i_smallest !== i_parent) {
     swap(arr, i_smallest, i_parent);
-    minHeapify(arr, i_smallest);
+    minHeapifyUp(arr, i_smallest);
   }
 }
 
-module.exports = { MinHeap };
+function isMinHeap(arr) {
+  return arr.every((v, i) => {
+    const [i_left, i_right] = getChildIndices(i);
+    if (arr[i_left] < v) {
+      return false;
+    }
+    if (arr[i_right] < v) {
+      return false;
+    }
+    return true;
+  });
+}
+
+module.exports = { MinHeap, buildMinHeap: minHeapifyArray };

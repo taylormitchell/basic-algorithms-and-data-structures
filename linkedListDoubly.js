@@ -68,53 +68,41 @@ class LinkedListDoubly {
 
   /**Insert value after index */
   insertAfter = (value, index) => {
-    const node = new Node(value);
-
-    // Get node at and after index
-    const nodeAtIndex = this.getNodeByIndex(index);
+    const nodeAtIndex = this.getNodeAtIndex(index);
     if (!nodeAtIndex) {
-      return false;
-    }
-    const nodeAfterIndex = nodeAtIndex.next;
-
-    // Link node to node at index
-    nodeAtIndex.next = node;
-    node.prev = nodeAtIndex;
-
-    // Link node to node after index
-    if (nodeAfterIndex) {
-      nodeAfterIndex.prev = node;
-      node.next = nodeAfterIndex;
+      // insert after tail
+      this.append(value);
     } else {
-      this.tail = node;
+      const node = new Node(value);
+      // insert anywhere else
+      const nodeAfterIndex = nodeAtIndex.next;
+
+      nodeAtIndex.next = node;
+      node.prev = nodeAtIndex;
+
+      node.next = nodeAfterIndex;
+      nodeAfterIndex.prev = node;
     }
-    return true;
   };
 
   /**Insert value before index */
   insertBefore = (value, index) => {
-    const node = new Node(value);
-
-    // Get node at and before index
-    const nodeAtIndex = this.getNodeByIndex(index);
+    const nodeAtIndex = this.getNodeAtIndex(index);
     if (!nodeAtIndex) {
-      return false;
-    }
-    const nodeBeforeIndex = nodeAtIndex.prev;
-
-    // Link node to node at index
-    nodeAtIndex.prev = node;
-    node.next = nodeAtIndex;
-
-    // Link node to node before index
-    if (nodeBeforeIndex) {
-      nodeBeforeIndex.prev = node;
-      node.next = nodeBeforeIndex;
+      this.append(value);
+    } else if (index === 0) {
+      this.push(value);
     } else {
-      this.head = node;
-    }
+      const node = new Node(value);
+      // insert in middle
+      const nodeBeforeIndex = nodeAtIndex.prev;
 
-    return true;
+      nodeBeforeIndex.next = node;
+      node.prev = nodeBeforeIndex;
+
+      node.next = nodeAtIndex;
+      nodeAtIndex.prev = node;
+    }
   };
 
   /**Get node by value */

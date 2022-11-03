@@ -1,13 +1,5 @@
 /**
  * Heap
- *
- * @todo implement in js (see https://www.youtube.com/watch?v=t0Cq6tVNRBA&ab_channel=HackerRank for reference)
- * @todo derive the equation for the parent/child index of a tree stored in an array then make it intuitive
- *
- *
- * Q:
- * A:
- *
  */
 class MinHeap {
   constructor(...values) {
@@ -111,4 +103,4 @@ function isMinHeap(arr) {
   });
 }
 
-module.exports = { MinHeap, buildMinHeap: minHeapifyArray };
+module.exports = { MinHeap };

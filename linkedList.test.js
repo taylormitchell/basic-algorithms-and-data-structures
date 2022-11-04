@@ -1,6 +1,7 @@
 let LinkedList;
 
-describe.each(["./linkedList.todo", "./linkedList"])("%s", (filename) => {
+// describe.each(["./linkedList.todo", "./linkedList"])("%s", (filename) => {
+describe.each(["./linkedList"])("%s", (filename) => {
   beforeAll(() => {
     LinkedList = require(filename).LinkedList;
   });
@@ -16,9 +17,9 @@ describe.each(["./linkedList.todo", "./linkedList"])("%s", (filename) => {
   test("insert", () => {
     let values = [1, 3, 4];
     let ll = new LinkedList(...values);
-    ll.insert(0, 0);
+    ll.insert(0, 1);
     expect(ll.values()).toEqual([0, 1, 3, 4]);
-    ll.insert(2, 2);
+    ll.insert(2, 3);
     expect(ll.values()).toEqual([0, 1, 2, 3, 4]);
   });
 

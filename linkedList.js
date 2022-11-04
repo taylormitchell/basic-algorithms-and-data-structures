@@ -1,111 +1,131 @@
 class Node {
-  constructor(value, next) {
-    this.value = value;
+  constructor(item, next = null) {
+    this.item = item;
     this.next = next;
   }
 }
 
 class LinkedList {
-  constructor(...values) {
-    this.head = values.length > 0 ? new Node(values[0]) : null;
+  constructor(...items) {
+    this.head = items.length > 0 ? new Node(items[0]) : null;
     let prevNode = this.head;
-    for (const value of values.slice(1)) {
-      let currNode = new Node(value);
-      prevNode.next = currNode;
-      prevNode = currNode;
+    for (const item of items.slice(1)) {
+      const node = new Node(item);
+      prevNode.next = node;
+      prevNode = node;
+    }
+    this.tail = prevNode;
+  }
+
+  push(item) {
+    const node = new Node(item);
+    node.next = this.head;
+    this.head = node;
+    if (!this.tail) {
+      this.tail = node;
     }
   }
 
-  push = (value) => {
-    const node = new Node(value);
-    node.next = this.head;
-    this.head = node;
-  };
+  append(item) {
+    if (!this.tail) {
+      this.push(item);
+    } else {
+      const node = new Node(item);
+      this.tail.next = node;
+      this.tail = node;
+    }
+  }
 
-  delete = (value) => {
-    // handle no head and value at head cases
+  pop() {
     if (!this.head) {
-      return false;
-    } else if (this.head.value === value) {
-      this.head = this.head.next;
-      return true;
+      return;
     }
-
-    // handle the rest
-    let prevNode = this.head;
-    let currNode = this.head.next;
-    while (currNode) {
-      if (currNode.value === value) {
-        prevNode.next = currNode.next;
-        return true;
-      }
-    }
-    return false;
-  };
-
-  /**
-   * Insert at index
-   * @param {*} value
-   * @param {*} index
-   * @returns
-   */
-  insert = (value, index) => {
+    const node = this.head;
+    this.head = this.head.next;
     if (!this.head) {
-      return false;
+      this.tail = null;
     }
-    if (index === 0) {
-      this.push(value);
-      return true;
-    }
+    return node.item;
+  }
 
-    let node = new Node(value);
-    let prevNode = this.head;
-    let currNode = this.head.next;
-    let i = 1;
-    while (currNode) {
-      if (i === index) {
-        prevNode.next = node;
-        node.next = currNode;
-        return true;
-      }
-      i++;
-      prevNode = currNode;
-      currNode = currNode.next;
-    }
-    return false;
-  };
-
-  has = (value) => {
-    let currNode = this.head;
-    while (currNode) {
-      if (currNode.value === value) {
-        return true;
-      }
-      currNode = currNode.next;
-    }
-    return false;
-  };
-
-  search = (value) => {};
-
-  values = () => {
-    let result = [];
+  find(fn) {
+    fn = this.fnify(fn);
     let node = this.head;
     while (node) {
-      result.push(node.value);
+      if (fn(node.item)) {
+        return node.item;
+      }
+      node = node.next;
+    }
+  }
+
+  insert(item, fn) {
+    fn = this.fnify(fn);
+    let prevNode = null;
+    let node = this.head;
+    while (node) {
+      if (fn(node.item)) {
+        const newNode = new Node(item);
+        newNode.next = node;
+        if (prevNode) {
+          newNode.next = node;
+          prevNode.next = newNode;
+        } else {
+          newNode.next = this.head;
+          this.head = newNode;
+        }
+        return true;
+      }
+      prevNode = node;
+      node = node.next;
+    }
+    return false;
+  }
+
+  has(fn) {
+    return this.find(fn) !== undefined;
+  }
+
+  delete(fn) {
+    fn = this.fnify(fn);
+    let prevNode = null;
+    let node = this.head;
+    while (node) {
+      if (fn(node.item)) {
+        if (!prevNode) {
+          this.head = this.head.next;
+        } else if (!node.next) {
+          this.tail = prevNode;
+          this.tail.next = null;
+        } else {
+          prevNode.next = node.next;
+        }
+        return true;
+      }
+      prevNode = node;
+      node = node.next;
+    }
+    return false;
+  }
+
+  values() {
+    const result = [];
+    let node = this.head;
+    while (node) {
+      result.push(node.item);
       node = node.next;
     }
     return result;
-  };
+  }
 
-  shift = () => {
-    if (!this.head) {
-      return null;
+  fnify(value) {
+    if (typeof value === "function") {
+      return value;
     }
-    let value = this.head.value;
-    this.head = this.head.next;
-    return value;
-  };
+    return (item) => item === value;
+  }
 }
 
-module.exports = { LinkedList, Node };
+module.exports = {
+  LinkedList,
+};

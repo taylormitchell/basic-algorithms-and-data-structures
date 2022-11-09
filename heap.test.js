@@ -1,8 +1,8 @@
 let MinHeap;
 
 describe.each([
-  // "./heap.todo",
-  "./heap",
+  "./heap.todo",
+  // "./heap"
 ])("%s", (filename) => {
   beforeAll(() => {
     const module = require(filename);
@@ -20,13 +20,13 @@ describe.each([
     expect(heap.values).toEqual(values);
   });
 
-  test("insert", () => {
+  test("push", () => {
     const heap = new MinHeap(1, 2, 3);
 
-    heap.insert(0);
+    heap.push(0);
     expect(heap.values).toEqual([0, 1, 3, 2]);
 
-    heap.insert(4);
+    heap.push(4);
     expect(heap.values).toEqual([0, 1, 3, 2, 4]);
   });
 

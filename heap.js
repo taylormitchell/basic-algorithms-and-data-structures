@@ -1,19 +1,20 @@
 class Heap {
-  constructor(values, shouldSwap = (a, b) => a > b) {
-    this.values = heapify(values, shouldSwap);
+  constructor(values, compare = (a, b) => a > b) {
+    this.values = heapify(values, compare);
+    this.compare = compare;
   }
 
   pop() {
-    const last = this.values.length - 1;
-    [this.values[0], this.values[last]] = [this.values[last], this.values[0]];
-    const minValue = this.values.pop();
-    this.values = heapifyDown(this.values);
-    return minValue;
+    if (!this.values) return;
+    const top = this.values[0];
+    this.values[0] = this.values.pop();
+    this.values = heapifyDown(this.values, 0, this.compare);
+    return top;
   }
 
   push(value) {
     this.values.push(value);
-    this.values = heapifyUp(this.values, this.values.length - 1);
+    heapifyUp(this.values, this.values.length - 1, this.compare);
   }
 }
 
@@ -29,64 +30,62 @@ class MaxHeap extends Heap {
   }
 }
 
-function getParentIndex(arr, i) {
-  if (i === 0) return null;
-  if (i < 0 || i >= arr.length) {
-    throw new Error("Index out of bounds");
+function heapify(values, compare = (a, b) => a > b) {
+  if (values.length === 0) return values;
+  const lastParent = getParentIndex(values, values.length - 1);
+  for (i = lastParent; i >= 0; i--) {
+    values = heapifyDown(values, i, compare);
   }
-  return Math.floor((i - 1) / 2);
+  return values;
 }
 
-function getChildIndices(arr, i) {
-  if (i < 0 || i >= arr.length) {
-    throw new Error("Index out of bounds");
+function heapifyUp(values, child, compare = (a, b) => a > b) {
+  const parent = getParentIndex(values, child);
+  if (parent !== null && compare(values[child], values[parent])) {
+    swap(values, parent, child);
+    values = heapifyUp(values, parent, compare);
   }
-  let left = 2 * i + 1;
-  left = left < arr.length ? left : null;
-  let right = 2 * i + 2;
-  right = right < arr.length ? right : null;
+  return values;
+}
+
+function heapifyDown(values, parent, compare = (a, b) => a > b) {
+  const [left, right] = getChildIndices(values, parent);
+
+  let mostest = parent;
+  if (left !== null && compare(values[left], values[mostest])) {
+    mostest = left;
+  }
+  if (right !== null && compare(values[right], values[mostest])) {
+    mostest = right;
+  }
+
+  if (mostest !== parent) {
+    swap(values, parent, mostest);
+    values = heapifyDown(values, mostest, compare);
+  }
+  return values;
+}
+
+function getParentIndex(values, child) {
+  if (child < 0 || child > values.length - 1) throw new Error("invalid index");
+  if (child === 0) return null;
+  return Math.floor((child - 1) / 2);
+}
+
+function getChildIndices(values, parent) {
+  if (parent < 0 || parent > values.length - 1) throw new Error("invalid index");
+  let left = 2 * parent + 1;
+  let right = left + 1;
+  left = left < values.length ? left : null;
+  right = right < values.length ? right : null;
   return [left, right];
 }
 
-function heapify(arr, shouldSwap = (a, b) => a > b) {
-  for (let i = arr.length - 1; i >= 0; i--) {
-    arr = heapifyDown(arr, i, shouldSwap);
-  }
-  return arr;
-}
-
-function heapifyDown(arr, parent = 0, shouldSwap = (a, b) => a > b) {
-  const [left, right] = getChildIndices(arr, parent);
-
-  let toSwap = parent;
-  if (left && shouldSwap(arr[left], arr[toSwap])) {
-    toSwap = left;
-  }
-  if (right && shouldSwap(arr[right], arr[toSwap])) {
-    toSwap = right;
-  }
-
-  if (toSwap !== parent) {
-    [arr[toSwap], arr[parent]] = [arr[parent], arr[toSwap]];
-    arr = heapifyDown(arr, toSwap, shouldSwap);
-  }
-  return arr;
-}
-
-function heapifyUp(arr, child, shouldSwap = (a, b) => a > b) {
-  if (!child) {
-    child = arr.length - 1;
-  }
-  const parent = getParentIndex(child);
-
-  if (parent && shouldSwap(arr[child], arr[parent])) {
-    [arr[child], arr[parent]] = [arr[parent], arr[child]];
-    arr = heapifyUp(arr, parent, shouldSwap);
-  }
-  return arr;
+function swap(values, a, b) {
+  [values[a], values[b]] = [values[b], values[a]];
 }
 
 module.exports = {
-  MaxHeap,
   MinHeap,
+  MaxHeap,
 };

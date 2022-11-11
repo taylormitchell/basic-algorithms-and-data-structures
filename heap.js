@@ -66,15 +66,20 @@ function heapifyDown(values, parent, compare = (a, b) => a > b) {
   return values;
 }
 
-function getParentIndex(values, child) {
-  if (child < 0 || child > values.length - 1) throw new Error("invalid index");
-  if (child === 0) return null;
-  return Math.floor((child - 1) / 2);
+function getParentIndex(values, index) {
+  if (index < 0 || index > values.length - 1) {
+    throw new Error(`invalid index ${index} for array of length ${values.length}`);
+  }
+  if (index === 0) return null;
+  const parent = Math.floor((index - 1) / 2);
+  return parent;
 }
 
-function getChildIndices(values, parent) {
-  if (parent < 0 || parent > values.length - 1) throw new Error("invalid index");
-  let left = 2 * parent + 1;
+function getChildIndices(values, index) {
+  if (index < 0 || index > values.length - 1) {
+    throw new Error(`invalid index ${index} for array of length ${values.length}`);
+  }
+  let left = 2 * index + 1;
   let right = left + 1;
   left = left < values.length ? left : null;
   right = right < values.length ? right : null;

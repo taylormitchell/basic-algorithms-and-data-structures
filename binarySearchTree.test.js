@@ -1,13 +1,17 @@
-let bst, Node;
+let bst, Node, binaryTree;
 
-describe.each(["./binarySearchTree.todo", "./binarySearchTree"])("%s", (filename) => {
+describe.each([
+  "./binarySearchTree",
+  // "./binarySearchTree.todo"
+])("%s", (filename) => {
   beforeAll(() => {
     bst = require(filename);
+    binaryTree = require("./binaryTree");
     Node = bst.Node;
   });
   test("toObject", () => {
     root = new Node(5, null, new Node(3), new Node(7));
-    const actual = bst.toObject(root);
+    const actual = binaryTree.toObject(root);
     const expected = {
       key: 5,
       value: 5,
@@ -60,7 +64,7 @@ describe.each(["./binarySearchTree.todo", "./binarySearchTree"])("%s", (filename
         },
       },
     };
-    const actual = bst.toObject(root);
+    const actual = binaryTree.toObject(root);
     expect(actual).toEqual(expected);
   });
   test("sanity", () => {
@@ -104,7 +108,7 @@ describe.each(["./binarySearchTree.todo", "./binarySearchTree"])("%s", (filename
    *          null    right
    */
   test("remove - 2 children - successor right", () => {
-    const root = bst.fromObject({
+    const root = binaryTree.fromObject({
       key: 3,
       value: 3,
       left: {
@@ -125,7 +129,7 @@ describe.each(["./binarySearchTree.todo", "./binarySearchTree"])("%s", (filename
         },
       },
     });
-    const actual = bst.toObject(bst.remove(root, 4));
+    const actual = binaryTree.toObject(bst.remove(root, 4));
     const expected = {
       key: 3,
       value: 3,
@@ -163,9 +167,9 @@ describe.each(["./binarySearchTree.todo", "./binarySearchTree"])("%s", (filename
 
   test("remove - not in tree", () => {
     let root = new Node(2, null, new Node(1), new Node(3));
-    let before = bst.toObject(root);
+    let before = binaryTree.toObject(root);
     root = bst.remove(root, 99);
-    let after = bst.toObject(root);
+    let after = binaryTree.toObject(root);
     expect(before).toEqual(after);
   });
 

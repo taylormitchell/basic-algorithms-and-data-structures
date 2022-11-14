@@ -32,7 +32,7 @@ class MaxHeap extends Heap {
 
 function heapify(values, compare = (a, b) => a > b) {
   if (values.length === 0) return values;
-  const lastParent = getParentIndex(values, values.length - 1);
+  const lastParent = getParentIndex(values.length - 1);
   for (i = lastParent; i >= 0; i--) {
     values = heapifyDown(values, i, compare);
   }
@@ -40,7 +40,10 @@ function heapify(values, compare = (a, b) => a > b) {
 }
 
 function heapifyUp(values, child, compare = (a, b) => a > b) {
-  const parent = getParentIndex(values, child);
+  if (child < 0 || child > values.length - 1) {
+    throw new Error(`invalid index ${child} for array of length ${values.length}`);
+  }
+  const parent = getParentIndex(child);
   if (parent !== null && compare(values[child], values[parent])) {
     swap(values, parent, child);
     values = heapifyUp(values, parent, compare);
@@ -49,13 +52,16 @@ function heapifyUp(values, child, compare = (a, b) => a > b) {
 }
 
 function heapifyDown(values, parent, compare = (a, b) => a > b) {
-  const [left, right] = getChildIndices(values, parent);
+  if (parent < 0 || parent > values.length - 1) {
+    throw new Error(`invalid index ${parent} for array of length ${values.length}`);
+  }
+  const [left, right] = getChildIndices(parent);
 
   let mostest = parent;
-  if (left !== null && compare(values[left], values[mostest])) {
+  if (left < values.length && compare(values[left], values[mostest])) {
     mostest = left;
   }
-  if (right !== null && compare(values[right], values[mostest])) {
+  if (right < values.length && compare(values[right], values[mostest])) {
     mostest = right;
   }
 
@@ -66,23 +72,15 @@ function heapifyDown(values, parent, compare = (a, b) => a > b) {
   return values;
 }
 
-function getParentIndex(values, index) {
-  if (index < 0 || index > values.length - 1) {
-    throw new Error(`invalid index ${index} for array of length ${values.length}`);
-  }
+function getParentIndex(index) {
   if (index === 0) return null;
   const parent = Math.floor((index - 1) / 2);
   return parent;
 }
 
-function getChildIndices(values, index) {
-  if (index < 0 || index > values.length - 1) {
-    throw new Error(`invalid index ${index} for array of length ${values.length}`);
-  }
+function getChildIndices(index) {
   let left = 2 * index + 1;
   let right = left + 1;
-  left = left < values.length ? left : null;
-  right = right < values.length ? right : null;
   return [left, right];
 }
 

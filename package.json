@@ -4,9 +4,6 @@
   "description": "A collection of javascript implementations of fundamental algorithms and data structures. Includes tests and blank templates that can be used to practice implementing yourself.",
   "main": "README.md",
   "scripts": {
-    "doing": "node ./scripts/do.js",
-    "clear": "node ./scripts/clear.js",
-    "make-todo": "node ./scripts/make-todo.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

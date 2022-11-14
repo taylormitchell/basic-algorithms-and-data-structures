@@ -5,7 +5,7 @@ class Node {
   }
 }
 
-class LinkedList {
+export class LinkedList {
   constructor(...items) {
     this.head = items.length > 0 ? new Node(items[0]) : null;
     let prevNode = this.head;
@@ -125,7 +125,3 @@ class LinkedList {
     return (item) => item === value;
   }
 }
-
-module.exports = {
-  LinkedList,
-};

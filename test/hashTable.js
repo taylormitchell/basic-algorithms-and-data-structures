@@ -1,6 +1,6 @@
 let HashTable;
 
-describe.each(["./hashTable.todo", "./hashTable"])("%s", (filename) => {
+describe.each(["../src/hashTable", "../practice/hashTable"])("%s", (filename) => {
   beforeAll(() => {
     const module = require(filename);
     HashTable = module.HashTable;

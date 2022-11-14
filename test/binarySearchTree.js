@@ -1,9 +1,6 @@
 let bst, Node, binaryTree;
 
-describe.each([
-  "./binarySearchTree",
-  // "./binarySearchTree.todo"
-])("%s", (filename) => {
+describe.each(["../src/binarySearchTree", "../practice/binarySearchTree"])("%s", (filename) => {
   beforeAll(() => {
     bst = require(filename);
     binaryTree = require("./binaryTree");

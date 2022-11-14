@@ -1,6 +1,6 @@
 let MinHeap;
 
-describe.each(["./heap.todo", "./heap"])("%s", (filename) => {
+describe.each(["../src/heap", "../practice/heap"])("%s", (filename) => {
   beforeAll(() => {
     const module = require(filename);
     MinHeap = module.MinHeap;

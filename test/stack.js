@@ -1,6 +1,6 @@
 let Stack;
 
-describe.each(["./stack.todo", "./stack"])("%s", (filename) => {
+describe.each(["../src/stack", "../practice/stack"])("%s", (filename) => {
   beforeAll(() => {
     const { Stack: cls } = require(filename);
     Stack = cls;

@@ -1,6 +1,6 @@
 let LinkedListDoubly;
 
-describe.each(["./linkedListDoubly.todo", "./linkedListDoubly"])("%s", (filename) => {
+describe.each(["../src/linkedListDoubly", "../practice/linkedListDoubly"])("%s", (filename) => {
   beforeAll(() => {
     const { LinkedListDoubly: cls } = require(filename);
     LinkedListDoubly = cls;

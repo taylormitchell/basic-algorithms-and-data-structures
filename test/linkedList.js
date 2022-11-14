@@ -1,7 +1,6 @@
 let LinkedList;
 
-// describe.each(["./linkedList.todo", "./linkedList"])("%s", (filename) => {
-describe.each(["./linkedList"])("%s", (filename) => {
+describe.each(["../src/linkedList", "../practice/linkedList"])("%s", (filename) => {
   beforeAll(() => {
     LinkedList = require(filename).LinkedList;
   });

@@ -1,6 +1,6 @@
 let Queue;
 
-describe.each(["./queue.todo", "./queue"])("%s", (filename) => {
+describe.each(["../src/queue", "../practice/queue"])("%s", (filename) => {
   beforeAll(() => {
     const { Queue: cls } = require(filename);
     Queue = cls;

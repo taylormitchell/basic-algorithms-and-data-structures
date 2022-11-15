@@ -1,8 +1,14 @@
+import { LinkedList as srcLinkedList } from "../src/linkedList.js";
+// import { LinkedList as practiceLinkedList } from "../practice/linkedList.js";
 let LinkedList;
 
-describe.each(["../src/linkedList", "../practice/linkedList"])("%s", (filename) => {
+describe.each([
+  srcLinkedList,
+  //practiceLinkedList
+])("%s", (cls) => {
   beforeAll(() => {
-    LinkedList = require(filename).LinkedList;
+    LinkedList = cls;
+    // LinkedList = require(filename).LinkedList;
   });
 
   test("constructor", () => {

@@ -4,14 +4,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script type="module">
-      import { LinkedList } from "https://cdn.jsdelivr.net/gh/taylormitchell/basic-algorithms-and-data-structures@modulify/src/linkedList.js";
-      const linkedList = new LinkedList(1, 2, 3);
-      linkedList.push(0);
-      console.log(linkedList.values());
-    </script>
   </head>
   <body>
-    <h1>Hello world</h1>
+    <h1>Example: Import as module</h1>
+    <div>
+      <span>linkedList.values = </span>
+      <span id="values"></span>
+    </div>
+    <script type="module">
+      import { LinkedList } from "../src/ads.js";
+      const linkedList = new LinkedList(1, 2, 3);
+      linkedList.push(0);
+      const el = document.getElementById("values");
+      el.innerHTML = linkedList.values();
+    </script>
   </body>
 </html>

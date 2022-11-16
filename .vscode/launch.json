@@ -9,15 +9,7 @@
       "request": "launch",
       "name": "current file",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${file}",
-      "args": ["linkedList.js"]
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "temp",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "./scripts/clear.js"
+      "program": "${file}"
     }
   ]
 }

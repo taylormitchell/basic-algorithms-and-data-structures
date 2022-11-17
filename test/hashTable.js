@@ -1,8 +1,12 @@
+import * as src from "../src/hashTable.js";
+import * as practice from "../practice/hashTable.js";
 let HashTable;
 
-describe.each(["../src/hashTable", "../practice/hashTable"])("%s", (filename) => {
+describe.each([
+  ["src", src],
+  // ["practice", practice]
+])("%s", (_, module) => {
   beforeAll(() => {
-    const module = require(filename);
     HashTable = module.HashTable;
   });
 

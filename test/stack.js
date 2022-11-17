@@ -1,9 +1,13 @@
+import * as src from "../src/stack.js";
+import * as practice from "../practice/stack.js";
 let Stack;
 
-describe.each(["../src/stack", "../practice/stack"])("%s", (filename) => {
+describe.each([
+  ["src", src],
+  // ["practice", practice]
+])("%s", (_, module) => {
   beforeAll(() => {
-    const { Stack: cls } = require(filename);
-    Stack = cls;
+    Stack = module.Stack;
   });
 
   test("constructor", () => {

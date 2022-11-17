@@ -1,8 +1,12 @@
+import * as src from "../src/heap.js";
+import * as practice from "../practice/heap.js";
 let MinHeap;
 
-describe.each(["../src/heap", "../practice/heap"])("%s", (filename) => {
+describe.each([
+  ["src", src],
+  // ["practice", practice]
+])("%s", (_, module) => {
   beforeAll(() => {
-    const module = require(filename);
     MinHeap = module.MinHeap;
   });
 

@@ -7,7 +7,7 @@ class Item {
   }
 }
 
-class HashTable {
+export class HashTable {
   constructor(size = 10) {
     this.size = size;
     this.buckets = new Array(size);
@@ -87,5 +87,3 @@ class HashTable {
     return entries;
   }
 }
-
-module.exports = { HashTable };

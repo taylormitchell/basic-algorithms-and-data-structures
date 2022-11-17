@@ -1,6 +1,7 @@
-const { randomInt } = require("./util");
+import { randomInt } from "./util.js";
+
 // BST
-class Node {
+export class Node {
   constructor(value, key = null, left = null, right = null) {
     this.value = value;
     this.key = key || value;
@@ -9,7 +10,7 @@ class Node {
   }
 }
 
-function insert(root, node) {
+export function insert(root, node) {
   if (!root) {
     return node;
   }
@@ -21,7 +22,7 @@ function insert(root, node) {
   return root;
 }
 
-function search(root, key) {
+export function search(root, key) {
   if (!root) {
     return null;
   }
@@ -34,7 +35,7 @@ function search(root, key) {
   }
 }
 
-function remove(root, key) {
+export function remove(root, key) {
   if (!root) {
     return null;
   }
@@ -125,7 +126,7 @@ function remove(root, key) {
  * ```
  * @returns
  */
-function simpleTree() {
+export function simpleTree() {
   let root = null;
   root = insert(root, new Node(4));
   root = insert(root, new Node(2));
@@ -136,7 +137,7 @@ function simpleTree() {
   return root;
 }
 
-function randomTree(size = 10, min = 0, max = 100) {
+export function randomTree(size = 10, min = 0, max = 100) {
   if (size <= 0) {
     return null;
   }
@@ -146,12 +147,3 @@ function randomTree(size = 10, min = 0, max = 100) {
   }
   return root;
 }
-
-module.exports = {
-  Node,
-  insert,
-  remove,
-  search,
-  randomTree,
-  simpleTree,
-};

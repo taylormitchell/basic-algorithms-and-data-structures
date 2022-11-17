@@ -1,9 +1,13 @@
+import * as src from "../src/queue.js";
+import * as practice from "../practice/queue.js";
 let Queue;
 
-describe.each(["../src/queue", "../practice/queue"])("%s", (filename) => {
+describe.each([
+  ["src", src],
+  // ["practice", practice]
+])("%s", (_, module) => {
   beforeAll(() => {
-    const { Queue: cls } = require(filename);
-    Queue = cls;
+    Queue = module.Queue;
   });
 
   test("constructor", () => {

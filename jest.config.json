@@ -1,5 +1,5 @@
 {
-  "testMatch": ["**/test/linkedList.js"],
+  "testMatch": ["**/test/**/*.js"],
   "testEnvironment": "jest-environment-node",
   "transform": {}
 }

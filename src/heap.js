@@ -18,13 +18,13 @@ class Heap {
   }
 }
 
-class MinHeap extends Heap {
+export class MinHeap extends Heap {
   constructor(...values) {
     super(values, (a, b) => a < b);
   }
 }
 
-class MaxHeap extends Heap {
+export class MaxHeap extends Heap {
   constructor(...values) {
     super(values, (a, b) => a > b);
   }
@@ -33,7 +33,7 @@ class MaxHeap extends Heap {
 function heapify(values, compare = (a, b) => a > b) {
   if (values.length === 0) return values;
   const lastParent = getParentIndex(values.length - 1);
-  for (i = lastParent; i >= 0; i--) {
+  for (let i = lastParent; i >= 0; i--) {
     values = heapifyDown(values, i, compare);
   }
   return values;
@@ -87,8 +87,3 @@ function getChildIndices(index) {
 function swap(values, a, b) {
   [values[a], values[b]] = [values[b], values[a]];
 }
-
-module.exports = {
-  MinHeap,
-  MaxHeap,
-};

@@ -1,6 +1,6 @@
-const { LinkedListDoubly } = require("./linkedListDoubly");
+import { LinkedListDoubly } from "./linkedListDoubly.js";
 
-class Queue {
+export class Queue {
   constructor(...items) {
     this.linkedList = new LinkedListDoubly(...items);
   }
@@ -21,7 +21,3 @@ class Queue {
     return this.linkedList.values();
   }
 }
-
-module.exports = {
-  Queue,
-};

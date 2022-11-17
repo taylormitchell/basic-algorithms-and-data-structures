@@ -1,13 +1,18 @@
-let bst, Node, binaryTree;
+import * as src from "../src/binarySearchTree.js";
+import * as practice from "../practice/binarySearchTree.js";
+import * as binaryTree from "../src/binaryTree.js";
+let bst, Node;
 
-describe.each(["../src/binarySearchTree", "../practice/binarySearchTree"])("%s", (filename) => {
+describe.each([
+  ["src", src],
+  // ["practice", practice]
+])("%s", (_, module) => {
   beforeAll(() => {
-    bst = require(filename);
-    binaryTree = require("./binaryTree");
+    bst = module;
     Node = bst.Node;
   });
   test("toObject", () => {
-    root = new Node(5, null, new Node(3), new Node(7));
+    const root = new Node(5, null, new Node(3), new Node(7));
     const actual = binaryTree.toObject(root);
     const expected = {
       key: 5,

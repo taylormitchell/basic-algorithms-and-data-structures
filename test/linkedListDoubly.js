@@ -1,9 +1,13 @@
+import * as src from "../src/linkedListDoubly.js";
+import * as practice from "../practice/linkedListDoubly.js";
 let LinkedListDoubly;
 
-describe.each(["../src/linkedListDoubly", "../practice/linkedListDoubly"])("%s", (filename) => {
+describe.each([
+  ["src", src],
+  // ["practice", practice]
+])("%s", (_, module) => {
   beforeAll(() => {
-    const { LinkedListDoubly: cls } = require(filename);
-    LinkedListDoubly = cls;
+    LinkedListDoubly = module.LinkedListDoubly;
   });
 
   test("constructor", () => {

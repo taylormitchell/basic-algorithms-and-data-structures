@@ -6,7 +6,7 @@ class Node {
   }
 }
 
-class LinkedListDoubly {
+export class LinkedListDoubly {
   constructor(...values) {
     this.head = null;
     this.tail = null;
@@ -68,7 +68,7 @@ class LinkedListDoubly {
 
   /**Insert value after index */
   insertAfter = (value, index) => {
-    const nodeAtIndex = this.getNodeAtIndex(index);
+    const nodeAtIndex = this.getNodeByIndex(index);
     if (!nodeAtIndex) {
       // insert after tail
       this.append(value);
@@ -87,7 +87,7 @@ class LinkedListDoubly {
 
   /**Insert value before index */
   insertBefore = (value, index) => {
-    const nodeAtIndex = this.getNodeAtIndex(index);
+    const nodeAtIndex = this.getNodeByIndex(index);
     if (!nodeAtIndex) {
       this.append(value);
     } else if (index === 0) {
@@ -172,5 +172,3 @@ class LinkedListDoubly {
     return result;
   };
 }
-
-module.exports = { LinkedListDoubly, Node };

@@ -1,4 +1,4 @@
-class Node {
+export class Node {
   constructor(value, key = null, left = null, right = null) {
     this.value = value;
     this.key = key || value;
@@ -28,7 +28,7 @@ class Node {
  *
  * @reference https://www.w3.org/TR/xml-entity-names/025.html
  */
-function toString(root) {
+export function toString(root) {
   function toStringArray(root) {
     if (!root) {
       return [[" "], 0];
@@ -104,7 +104,7 @@ function toString(root) {
   return lines.join("\n");
 }
 
-function toObject(root) {
+export function toObject(root) {
   if (!root) {
     return null;
   }
@@ -116,7 +116,7 @@ function toObject(root) {
   };
 }
 
-function fromObject(obj) {
+export function fromObject(obj) {
   if (!obj) {
     return null;
   }
@@ -131,9 +131,3 @@ function fromObject(obj) {
   root.right = fromObject(obj.right);
   return root;
 }
-
-module.exports = {
-  toString,
-  toObject,
-  fromObject,
-};

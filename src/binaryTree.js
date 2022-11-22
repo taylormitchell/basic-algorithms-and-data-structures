@@ -131,3 +131,33 @@ export function fromObject(obj) {
   root.right = fromObject(obj.right);
   return root;
 }
+
+/**
+ * Take an array of values and convert it to a binary tree
+ */
+export function fromArray(array) {
+  if (!array.length) {
+    return null;
+  }
+  let root = new Node(array[0]);
+  let queue = [root];
+  let i = 0;
+  while (queue.length) {
+    let node = queue.shift();
+    let [leftIndex, rightIndex] = getChildIndices(i);
+    if (leftIndex < array.length) {
+      node.left = new Node(array[leftIndex]);
+      queue.push(node.left);
+    }
+    if (rightIndex < array.length) {
+      node.right = new Node(array[rightIndex]);
+      queue.push(node.right);
+    }
+    i++;
+  }
+  return root;
+}
+
+export function getChildIndices(index) {
+  return [index * 2 + 1, index * 2 + 2];
+}

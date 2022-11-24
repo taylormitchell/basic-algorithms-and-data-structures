@@ -30,7 +30,7 @@ export class MaxHeap extends Heap {
   }
 }
 
-function heapify(values, compare = (a, b) => a > b) {
+export function heapify(values, compare = (a, b) => a > b) {
   if (values.length === 0) return values;
   const lastParent = getParentIndex(values.length - 1);
   for (let i = lastParent; i >= 0; i--) {

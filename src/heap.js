@@ -5,7 +5,7 @@ class Heap {
   }
 
   pop() {
-    if (!this.values) return;
+    if (this.values.length === 0) return;
     const top = this.values[0];
     this.values[0] = this.values.pop();
     this.values = heapifyDown(this.values, 0, this.compare);
@@ -31,7 +31,7 @@ export class MaxHeap extends Heap {
 }
 
 export function heapify(values, compare = (a, b) => a > b) {
-  if (values.length === 0) return values;
+  if (values.length <= 1) return values;
   const lastParent = getParentIndex(values.length - 1);
   for (let i = lastParent; i >= 0; i--) {
     values = heapifyDown(values, i, compare);
@@ -40,8 +40,10 @@ export function heapify(values, compare = (a, b) => a > b) {
 }
 
 function heapifyUp(values, child, compare = (a, b) => a > b) {
-  if (child < 0 || child > values.length - 1) {
-    throw new Error(`invalid index ${child} for array of length ${values.length}`);
+  if (values[child] === undefined) {
+    throw new Error(
+      `invalid index ${child} for array of length ${values.length}`
+    );
   }
   const parent = getParentIndex(child);
   if (parent !== null && compare(values[child], values[parent])) {
@@ -52,8 +54,10 @@ function heapifyUp(values, child, compare = (a, b) => a > b) {
 }
 
 function heapifyDown(values, parent, compare = (a, b) => a > b) {
-  if (parent < 0 || parent > values.length - 1) {
-    throw new Error(`invalid index ${parent} for array of length ${values.length}`);
+  if (values[parent] === undefined) {
+    throw new Error(
+      `invalid index ${parent} for array of length ${values.length}`
+    );
   }
   const [left, right] = getChildIndices(parent);
 

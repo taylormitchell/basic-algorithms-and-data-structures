@@ -1,0 +1,82 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        padding: 20px;
+      }
+      pre {
+        font-size: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Heap</h1>
+    <div>
+      <div id="front" class="card">Loading front...</div>
+      <div id="back" class="card" style="display: none">Loading back...</div>
+      <!-- <div>Manually <span id="heap-type"></span> heap sort the following binary tree:</div>
+      <pre id="pre"></pre> -->
+    </div>
+    <button id="btn">Show Answer</button>
+    <script src="../dist/ads.js"></script>
+    <script type="module">
+      // import { util, binaryTree as tree, heap } from "../src/ads.js";
+
+      function front() {
+        const { heap, binaryTree: tree, util } = ads;
+        let { heapType, arr, arrHeapified } = window;
+        if (!heapType || !arr || !arrHeapified) {
+          arr = util.randomIntArray(10);
+          // randomly choose min or max heap
+          if (Math.random() < 0.5) {
+            arrHeapified = heap.heapify([...arr], (a, b) => a < b);
+            heapType = "min";
+          } else {
+            arrHeapified = heap.heapify([...arr], (a, b) => a > b);
+            heapType = "max";
+          }
+          window.arr = arr;
+          window.arrHeapified = arrHeapified;
+          window.heapType = heapType;
+        }
+        // display the array
+        const root = tree.fromArray(arr);
+        const front = document.getElementById("front");
+        front.innerHTML = "";
+        const div = document.createElement("div");
+        div.innerHTML = "Manually " + heapType + " heap sort the following binary tree:";
+        const pre = document.createElement("pre");
+        pre.innerHTML = tree.toString(root);
+        front.appendChild(div);
+        front.appendChild(pre);
+      }
+
+      function back() {
+        const { heap, binaryTree: tree, util } = ads;
+        const root = tree.fromArray(window.arrHeapified);
+        const back = document.getElementById("back");
+        back.innerHTML = "";
+        back.style.display = "block";
+        const pre = document.createElement("pre");
+        pre.innerHTML = tree.toString(root);
+        back.appendChild(pre);
+      }
+
+      front();
+      document.getElementById("btn").addEventListener("click", back);
+    </script>
+  </body>
+</html>
+
+const { heap, binaryTree: tree, util } = ads;
+const root = tree.fromArray(window.arrHeapified);
+const back = document.getElementById("back");
+back.innerHTML = "";
+back.style.display = "block";
+const pre = document.createElement("pre");
+pre.innerHTML = tree.toString(root);
+back.appendChild(pre);

@@ -1,0 +1,26 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="front" class="card">Loading front...</div>
+    <script src="http://localhost:5500/dist/ads.js"></script>
+    <script>
+      let html, code;
+      try {
+        alert(JSON.stringify(ads));
+        html = `
+              const { heap, binaryTree: tree, util } = ads;<br>let { heapType, arr, arrHeapified } = window;<br>if (!heapType || !arr || !arrHeapified) {<br>&nbsp; arr = util.randomIntArray(10);<br>&nbsp; // randomly choose min or max heap<br>&nbsp; if (Math.random() &lt; 0.5) {<br>&nbsp;&nbsp;&nbsp; arrHeapified = heap.heapify([...arr], (a, b) =&gt; a &lt; b);<br>&nbsp;&nbsp;&nbsp; heapType = "min";<br>&nbsp; } else {<br>&nbsp;&nbsp;&nbsp; arrHeapified = heap.heapify([...arr], (a, b) =&gt; a &gt; b);<br>&nbsp;&nbsp;&nbsp; heapType = "max";<br>&nbsp; }<br>&nbsp; window.arr = arr;<br>&nbsp; window.arrHeapified = arrHeapified;<br>&nbsp; window.heapType = heapType;<br>}<br>// display the array<br>const root = tree.fromArray(arr);<br>const front = document.getElementById("front");<br>front.innerHTML = "";<br>const div = document.createElement("div");<br>div.innerHTML = "Manually " + heapType + " heap sort the following binary tree:";<br>const pre = document.createElement("pre");<br>pre.innerHTML = tree.toString(root);<br>front.appendChild(div);<br>front.appendChild(pre);
+          `;
+        code = new DOMParser().parseFromString(html.replace(/<br>/g, "\n"), "text/html")
+          .documentElement.textContent;
+        eval(code);
+      } catch (error) {
+        alert(JSON.stringify({ error: error.message, html, code }, null, 2));
+      }
+    </script>
+  </body>
+</html>

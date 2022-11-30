@@ -4,19 +4,51 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      body {
+        padding: 20px;
+      }
+      pre {
+        font-size: 1.5rem;
+      }
+    </style>
   </head>
   <body>
-    <h1>Example: Import as module</h1>
+    <h1>Heap</h1>
     <div>
-      <span>linkedList.values = </span>
-      <span id="values"></span>
+      <div>Manually <span id="heap-type"></span> heap sort the following binary tree:</div>
       <pre id="pre"></pre>
     </div>
+    <button id="btn">Show Answer</button>
     <script type="module">
-      import * as bst from "../src/binarySearchTree.js";
-      import * as tree from "../src/binaryTree.js";
-      const root = tree.fromArray([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
-      document.getElementById("pre").innerHTML = tree.toString(root);
+      import { util, binaryTree as tree, heap } from "../src/ads.js";
+
+      function front() {
+        const arr = util.randomIntArray(10);
+        // display the array
+        const root = tree.fromArray(arr);
+        document.getElementById("pre").innerHTML = tree.toString(root);
+
+        // randomly choose min or max heap
+        if (Math.random() < 0.5) {
+          heap.heapify(arr, (a, b) => a < b);
+          document.getElementById("heap-type").innerHTML = "min";
+        } else {
+          heap.heapify(arr, (a, b) => a > b);
+          document.getElementById("heap-type").innerHTML = "max";
+        }
+
+        // save array to window object
+        window.arr = arr;
+      }
+
+      function back() {
+        const root = tree.fromArray(window.arr);
+        document.getElementById("pre").innerHTML = tree.toString(root);
+      }
+
+      front();
+      document.getElementById("btn").addEventListener("click", back);
     </script>
   </body>
 </html>

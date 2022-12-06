@@ -1,0 +1,45 @@
+<script>
+  function evalCodeBlock(selector) {
+    let code;
+    try {
+      code = document.querySelector(selector).innerText.trim();
+      eval(code);
+    } catch (error) {
+      log(JSON.stringify({ error: error.message, code }, null, 2));
+    }
+  }
+  function log(...args) {
+    console.log(...args);
+    const consoleDiv = document.querySelector(".console");
+    const p = document.createElement("p");
+    p.innerText = args.join(" ");
+    consoleDiv.appendChild(p);
+    openConsole();
+  }
+  function evalFront() {
+    evalCodeBlock(".code.front");
+  }
+  function evalBack() {
+    evalCodeBlock(".code.back");
+  }
+  function openConsole() {
+    const consoleDiv = document.querySelector(".console");
+    consoleDiv.style.display = "block";
+  }
+  function closeConsole() {
+    const consoleDiv = document.querySelector(".console");
+    consoleDiv.style.display = "none";
+  }
+</script>
+<div class="code-blocks">
+  <div class="code front">{{onFront}}</div>
+  <div class="code back">{{onBack}}</div>
+</div>
+<div class="modal">
+  <pre class="console"></pre>
+</div>
+
+<div id="front" class="card">{{Front}}</div>
+<script>
+  evalFront();
+</script>

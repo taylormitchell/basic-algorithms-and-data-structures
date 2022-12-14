@@ -1,14 +1,26 @@
 <script>
-  function evalCallbackCodeblock(selector, ...args) {
-    const anki_data = window.anki_data || {};
-    const html = document.querySelector(selector).innerText.trim();
-    const code = new DOMParser().parseFromString(html.replace(/<br>/g, "\n").trim(), "text/html")
-      .documentElement.textContent;
+  function evalElement(selector, ...args) {
+    const html = document.querySelector(selector).innerText.replace(/<br>/g, "\n").trim();
+    const code = new DOMParser().parseFromString(html, "text/html").documentElement.textContent;
     try {
       const fn = eval(code);
       return fn(...args);
     } catch (error) {
       log(`Error evaluating code at "${selector}": ${error.message}`);
+    }
+  }
+  function render() {
+    window.sides = window.sides || evalElement("#render");
+    for (const side of ["front", "back"]) {
+      content = window.sides[side];
+      const el = document.getElementById(side);
+      if (!el || !content) {
+        continue;
+      } else if (content instanceof Node) {
+        el.appendChild(content);
+      } else if (typeof content === "string") {
+        el.innerHTML = content;
+      }
     }
   }
   function log(...args) {
@@ -18,24 +30,6 @@
     el.innerHTML = args.join(" ");
     content.appendChild(el);
     openModal();
-  }
-  function evalFront() {
-    const el = evalCallbackCodeblock(".code.front", getProps());
-    if (el) {
-      document.querySelector("#front").appendChild(el);
-    }
-  }
-  function evalBack() {
-    const el = evalCallbackCodeblock(".code.back", getProps());
-    if (el) {
-      document.querySelector("#back").appendChild(el);
-    }
-  }
-  function getProps() {
-    if (!window.props) {
-      window.props = evalCallbackCodeblock(".code.props");
-    }
-    return window.props;
   }
   function openModal() {
     const consoleDiv = document.querySelector(".modal-container");
@@ -50,20 +44,16 @@
     consoleDiv.style.display = "none";
   }
 </script>
-<div class="code-blocks">
-  <div class="code front">{{onFront}}</div>
-  <div class="code back">{{onBack}}</div>
-  <div class="code props">{{setProps}}</div>
+<div id="render">{{render}}</div>
+<div class="card-content">
+  <div id="front" class="card"></div>
+  <script>
+    render();
+  </script>
 </div>
 <div class="modal-container">
   <div class="modal">
     <div class="content"></div>
     <button onclick="closeModal()">Close</button>
   </div>
-</div>
-<div class="card-content">
-  <div id="front" class="card"></div>
-  <script>
-    evalFront();
-  </script>
 </div>

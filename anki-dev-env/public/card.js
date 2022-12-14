@@ -1,20 +1,13 @@
-const setProps = () => {
+const render = () => {
   const kgToLbs = 2.20462;
   const kg = Math.ceil(Math.random() * 100);
-  const lbs = kg * kgToLbs;
-  return { kg, lbs };
-};
-
-const onFront = ({ kg }) => {
-  return document.createTextNode(`What is ${kg} kg in lbs?`);
-};
-
-const onBack = ({ lbs }) => {
-  return document.createTextNode(`${lbs} lbs`);
+  const lbs = Math.floor(kg * kgToLbs);
+  return {
+    front: document.createTextNode(`What is ${kg} kg in lbs?`),
+    back: document.createTextNode(`${lbs} lbs`),
+  };
 };
 
 module.exports = {
-  setProps: setProps.toString(),
-  onFront: onFront.toString(),
-  onBack: onBack.toString(),
+  render: render.toString(),
 };

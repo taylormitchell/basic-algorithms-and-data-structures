@@ -10,14 +10,10 @@ const port = 3000;
 
 const frontSide = fs
   .readFileSync("./public/frontTemplate.html", "utf-8")
-  .replace("{{onFront}}", card.onFront)
-  .replace("{{onBack}}", card.onBack)
-  .replace("{{setProps}}", card.setProps);
+  .replace("{{render}}", card.render);
 
 const backSide = fs
   .readFileSync("./public/backTemplate.html", "utf-8")
-  .replace("{{onFront}}", card.onFront)
-  .replace("{{onBack}}", card.onBack)
   .replace("{{FrontSide}}", frontSide);
 
 const cardTemplate = fs.readFileSync("./cardTemplate.html", "utf-8");

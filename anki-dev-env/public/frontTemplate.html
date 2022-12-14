@@ -1,33 +1,44 @@
 <script>
   function evalCodeBlock(selector) {
-    let code;
-    try {
-      code = document.querySelector(selector).innerText.trim();
-      eval(code);
-    } catch (error) {
-      log(JSON.stringify({ error: error.message, code }, null, 2));
-    }
+    const anki_data = window.anki_data || {};
+    const html = document.querySelector(selector).innerText.trim();
+    const code = new DOMParser().parseFromString(html.replace(/<br>/g, "\n").trim(), "text/html")
+      .documentElement.textContent;
+    const fn = eval(code);
+    window.anki_data = fn(anki_data);
   }
   function log(...args) {
     console.log(...args);
-    const consoleDiv = document.querySelector(".console");
-    const p = document.createElement("p");
-    p.innerText = args.join(" ");
-    consoleDiv.appendChild(p);
-    openConsole();
+    const content = document.querySelector(".modal .content");
+    const el = document.createElement("div");
+    el.innerHTML = args.join(" ");
+    content.appendChild(el);
+    openModal();
   }
   function evalFront() {
-    evalCodeBlock(".code.front");
+    try {
+      evalCodeBlock(".code.front");
+    } catch (error) {
+      log(`Error onFront: ${error.message}`);
+    }
   }
   function evalBack() {
-    evalCodeBlock(".code.back");
+    try {
+      evalCodeBlock(".code.back");
+    } catch (error) {
+      log(`Error onBack: ${error.message}`);
+    }
   }
-  function openConsole() {
-    const consoleDiv = document.querySelector(".console");
-    consoleDiv.style.display = "block";
+  function openModal() {
+    const consoleDiv = document.querySelector(".modal-container");
+    consoleDiv.style.display = "flex";
   }
-  function closeConsole() {
-    const consoleDiv = document.querySelector(".console");
+  function closeModal() {
+    const consoleDiv = document.querySelector(".modal-container");
+    const content = document.querySelector(".modal .content");
+    while (content.firstChild) {
+      content.removeChild(content.firstChild);
+    }
     consoleDiv.style.display = "none";
   }
 </script>
@@ -35,11 +46,15 @@
   <div class="code front">{{onFront}}</div>
   <div class="code back">{{onBack}}</div>
 </div>
-<div class="modal">
-  <pre class="console"></pre>
+<div class="modal-container">
+  <div class="modal">
+    <div class="content"></div>
+    <button onclick="closeModal()">Close</button>
+  </div>
 </div>
-
-<div id="front" class="card">{{Front}}</div>
-<script>
-  evalFront();
-</script>
+<div class="card-content">
+  <div id="front" class="card">{{Front}}</div>
+  <script>
+    evalFront();
+  </script>
+</div>

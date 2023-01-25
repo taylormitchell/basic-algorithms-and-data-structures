@@ -1,3 +1,5 @@
+import { LinkedListDoubly } from "../src/linkedListDoubly";
+
 export class Node {
   constructor(value, children = [], key = null) {
     this.value = value;
@@ -6,17 +8,17 @@ export class Node {
   }
 }
 
-export function bfs(node, key) {
-  if (!node) {
+export function bfs(root, key) {
+  if (!root) {
     return null;
   }
-  const q = [node];
-  while (q.length > 0) {
-    const n = q.shift();
-    if (n.key === key) {
-      return n;
+  const q = new LinkedListDoubly(root);
+  while (!q.isEmpty()) {
+    const node = q.shift();
+    if (node.key === key) {
+      return node;
     }
-    q.push(...n.children);
+    q.push(...node.children);
   }
   return null;
 }

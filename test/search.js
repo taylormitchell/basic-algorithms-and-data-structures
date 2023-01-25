@@ -1,10 +1,10 @@
 import * as src from "../src/search.js";
-// import * as practice from "../practice/bfs.js";
+// import * as practice from "../practice/search.js";
 let bfs, dfs, Node;
 
 describe.each([
   ["src", src],
-  // ["practice", practice]
+  // ["practice", practice],
 ])("%s", (_, module) => {
   beforeAll(() => {
     bfs = module.bfs;

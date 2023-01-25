@@ -5,8 +5,8 @@ export class Queue {
     this.linkedList = new LinkedListDoubly(...items);
   }
 
-  enqueue(item) {
-    this.linkedList.append(item);
+  enqueue(...items) {
+    this.linkedList.push(...items);
   }
 
   dequeue() {

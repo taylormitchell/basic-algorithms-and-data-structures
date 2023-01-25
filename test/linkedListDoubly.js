@@ -50,20 +50,20 @@ describe.each([
     expect(ll.valuesReverse()).toEqual([0, 1, 2, 3, 4].reverse());
   });
 
-  test("push", () => {
+  test("unshift", () => {
     let values = [1, 2, 3];
     let ll = new LinkedListDoubly(...values);
-    ll.push(0);
+    ll.unshift(0);
     expect(ll.values()).toEqual([0, 1, 2, 3]);
     expect(ll.valuesReverse()).toEqual([0, 1, 2, 3].reverse());
   });
 
-  test("append", () => {
+  test("push", () => {
     let values = [1, 2, 3];
     let ll = new LinkedListDoubly(...values);
-    ll.append(4);
-    expect(ll.values()).toEqual([1, 2, 3, 4]);
-    expect(ll.valuesReverse()).toEqual([1, 2, 3, 4].reverse());
+    ll.push(4, 5);
+    expect(ll.values()).toEqual([1, 2, 3, 4, 5]);
+    expect(ll.valuesReverse()).toEqual([1, 2, 3, 4, 5].reverse());
   });
 
   test("delete", () => {

@@ -10,11 +10,11 @@ export class LinkedListDoubly {
   constructor(...values) {
     this.head = null;
     this.tail = null;
-    values.forEach((value) => this.append(value));
+    values.forEach((value) => this.push(value));
   }
 
   /**Insert value at head */
-  push = (value) => {
+  unshift = (value) => {
     const node = new Node(value);
     if (!this.head) {
       this.head = node;
@@ -27,14 +27,16 @@ export class LinkedListDoubly {
   };
 
   /**Insert value at tail */
-  append = (value) => {
-    const node = new Node(value);
-    if (!this.tail) {
-      this.head = this.tail = node;
-    } else {
-      this.tail.next = node;
-      node.prev = this.tail;
-      this.tail = node;
+  push = (...values) => {
+    for (const value of values) {
+      const node = new Node(value);
+      if (!this.tail) {
+        this.head = this.tail = node;
+      } else {
+        this.tail.next = node;
+        node.prev = this.tail;
+        this.tail = node;
+      }
     }
   };
 
@@ -71,7 +73,7 @@ export class LinkedListDoubly {
     const nodeAtIndex = this.getNodeByIndex(index);
     if (!nodeAtIndex) {
       // insert after tail
-      this.append(value);
+      this.push(value);
     } else {
       const node = new Node(value);
       // insert anywhere else
@@ -89,9 +91,9 @@ export class LinkedListDoubly {
   insertBefore = (value, index) => {
     const nodeAtIndex = this.getNodeByIndex(index);
     if (!nodeAtIndex) {
-      this.append(value);
-    } else if (index === 0) {
       this.push(value);
+    } else if (index === 0) {
+      this.unshift(value);
     } else {
       const node = new Node(value);
       // insert in middle
@@ -170,5 +172,13 @@ export class LinkedListDoubly {
       node = node.prev;
     }
     return result;
+  };
+
+  peak = () => {
+    return this.head?.value;
+  };
+
+  isEmpty = () => {
+    return this.head === null;
   };
 }

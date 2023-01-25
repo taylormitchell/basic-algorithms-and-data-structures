@@ -18,6 +18,7 @@ export function bfs(node, key) {
     }
     q.push(...n.children);
   }
+  return null;
 }
 
 export function dfs(node, key) {
@@ -30,4 +31,5 @@ export function dfs(node, key) {
       return res;
     }
   }
+  return null;
 }

@@ -4,7 +4,7 @@ let quickSort;
 
 describe.each([
   ["src", src],
-  // ["practice", practice]
+  // ["practice", practice],
 ])("%s", (_, module) => {
   beforeAll(() => {
     quickSort = module.quickSort;
@@ -14,6 +14,9 @@ describe.each([
   });
   test("single", () => {
     expect(quickSort([1])).toEqual([1]);
+  });
+  test("two", () => {
+    expect(quickSort([2, 1])).toEqual([1, 2]);
   });
   test("sorted", () => {
     expect(quickSort([1, 2, 3])).toEqual([1, 2, 3]);

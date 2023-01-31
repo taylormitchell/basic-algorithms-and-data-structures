@@ -16,9 +16,8 @@ export class LinkedListDoubly {
   /**Insert value at head */
   unshift = (value) => {
     const node = new Node(value);
-    if (!this.head) {
-      this.head = node;
-      this.tail = node;
+    if (this.isEmpty()) {
+      this.head = this.tail = node;
     } else {
       node.next = this.head;
       this.head.prev = node;
@@ -42,9 +41,7 @@ export class LinkedListDoubly {
 
   /**Remove head and return it's value */
   shift = () => {
-    if (this.head === null) {
-      return null;
-    }
+    if (this.isEmpty()) return null;
     const value = this.head.value;
     this.deleteNode(this.head);
     return value;
@@ -132,14 +129,13 @@ export class LinkedListDoubly {
    */
   deleteNode = (node) => {
     if (!node) return false;
-    if (!node.next && !node.prev) {
-      this.head = null;
-      this.tail = null;
-    } else if (!node.prev) {
+    if (node === this.head && node === this.tail) {
+      this.head = this.tail = null;
+    } else if (node === this.head) {
       this.head = this.head.next;
       this.head.prev = null;
       return;
-    } else if (!node.next) {
+    } else if (node === this.tail) {
       this.tail = this.tail.prev;
       this.tail.next = null;
       return;

@@ -1,11 +1,12 @@
 import * as src from "../src/binarySearchTree.js";
+import { simpleTree } from "../src/binarySearchTree.js";
 import * as practice from "../practice/binarySearchTree.js";
 import * as binaryTree from "../src/binaryTree.js";
 let bst, Node;
 
 describe.each([
   ["src", src],
-  // ["practice", practice]
+  // ["practice", practice],
 ])("%s", (_, module) => {
   beforeAll(() => {
     bst = module;
@@ -34,7 +35,7 @@ describe.each([
   });
 
   test("simpleTree", () => {
-    let root = bst.simpleTree();
+    let root = simpleTree();
     const expected = {
       key: 4,
       value: 4,
@@ -79,14 +80,14 @@ describe.each([
   });
 
   test("remove - 0 children", () => {
-    let root = bst.simpleTree();
+    let root = simpleTree();
     root = bst.remove(root, 6);
     expect(root.right.key).toEqual(5);
     expect(root.right.right).toEqual(null);
   });
 
   test("remove - 1 children", () => {
-    let root = bst.simpleTree();
+    let root = simpleTree();
     root = bst.remove(root, 5);
     expect(root.right.key).toEqual(6);
     expect(root.right.right).toEqual(null);
@@ -94,7 +95,7 @@ describe.each([
   });
 
   test("remove - 2 children", () => {
-    let root = bst.simpleTree();
+    let root = simpleTree();
     root = bst.remove(root, 2);
     expect(root.left.key).toBe(3);
     expect(root.left.right).toEqual(null);

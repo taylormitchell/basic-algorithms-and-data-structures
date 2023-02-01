@@ -10,21 +10,21 @@ describe.each([
     binarySearch = module.binarySearch;
   });
   test("mid", () => {
-    binarySearch([1, 2, 3, 4, 5], 3);
+    expect(binarySearch([1, 2, 3, 4, 5], 3)).toEqual(2);
   });
   test("start", () => {
-    binarySearch([1, 2, 3, 4, 5], 1);
+    expect(binarySearch([1, 2, 3, 4, 5], 1)).toEqual(0);
   });
   test("end", () => {
-    binarySearch([1, 2, 3, 4, 5], 5);
+    expect(binarySearch([1, 2, 3, 4, 5], 5)).toEqual(4);
   });
   test("mid-left", () => {
-    binarySearch([1, 2, 3, 4, 5], 2);
+    expect(binarySearch([1, 2, 3, 4, 5], 2)).toEqual(1);
   });
   test("missing", () => {
-    binarySearch([1, 2, 3, 4, 5], 6);
+    expect(binarySearch([1, 2, 3, 4, 5], 6)).toBeNull();
   });
   test("empty", () => {
-    binarySearch([], 6);
+    expect(binarySearch([], 6)).toBeNull();
   });
 });

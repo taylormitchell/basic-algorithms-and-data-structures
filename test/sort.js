@@ -1,5 +1,5 @@
 import * as src from "../src/sort";
-// import * as practice from "../practice/sort.js";
+import * as practice from "../practice/sort.js";
 let quickSort;
 
 describe.each([

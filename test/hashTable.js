@@ -4,7 +4,7 @@ let HashTable;
 
 describe.each([
   ["src", src],
-  // ["practice", practice]
+  // ["practice", practice],
 ])("%s", (_, module) => {
   beforeAll(() => {
     HashTable = module.HashTable;
@@ -39,9 +39,9 @@ describe.each([
       hashTable.set("a", 1);
       expect(hashTable.get("a")).toEqual(1);
     });
-    test("should return null when missing a value", () => {
+    test("should return undefined when missing a value", () => {
       let hashTable = new HashTable();
-      expect(hashTable.get("a")).toEqual(null);
+      expect(hashTable.get("a")).toEqual(undefined);
     });
   });
 
@@ -50,7 +50,7 @@ describe.each([
       let hashTable = new HashTable();
       hashTable.set("a", 1);
       hashTable.delete("a");
-      expect(hashTable.get("a")).toEqual(null);
+      expect(hashTable.get("a")).toEqual(undefined);
     });
     test("should return false when missing a value", () => {
       let hashTable = new HashTable();

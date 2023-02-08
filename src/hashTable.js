@@ -10,80 +10,45 @@ class Item {
 export class HashTable {
   constructor(size = 10) {
     this.size = size;
-    this.buckets = new Array(size);
+    this.buckets = new Array(size).fill().map((v) => []);
     this.prime = 31;
   }
 
-  /**
-   * Generates the bucket index for a given key
-   * @param {string} key
-   */
   hash(key) {
-    let keyAsInteger;
-    if (typeof key === "number") {
-      keyAsInteger = key;
-    } else {
-      let keyCharCodes = key
-        .toString()
-        .split("")
-        .map((char) => char.charCodeAt(0)); // abc => [97, 98, 99]
-      keyAsInteger = keyCharCodes.reduce((acc, curr) => acc + curr, 0); // [97, 98, 99] => 609
-    }
-    return (keyAsInteger * this.prime) % this.size; // 609 % 10 = 9
+    const keyInts = key.split("").map((char) => char.charCodeAt(0));
+    const keyInt = keyInts.reduce((acc, curr) => acc + curr, 0);
+    return (keyInt * this.prime) % this.size;
   }
 
   set(key, value) {
     const index = this.hash(key);
-    if (!this.buckets[index]) {
-      this.buckets[index] = []; // this should be a linked list
+    const item = this.buckets[index].find((i) => i.key === key);
+    if (item) {
+      item.value = value;
+    } else {
+      this.buckets[index].push(new Item(key, value));
     }
-    let items = this.buckets[index];
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].key === key) {
-        items[i].value = value;
-        return;
-      }
-    }
-    items.push(new Item(key, value));
   }
 
   get(key) {
     const index = this.hash(key);
-    if (!this.buckets[index]) {
-      return null;
-    }
-    let items = this.buckets[index];
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].key === key) {
-        return items[i].value;
-      }
-    }
-    return null;
+    const item = this.buckets[index].find((i) => i.key === key);
+    return item ? item.value : undefined;
   }
 
   delete(key) {
     const index = this.hash(key);
-    if (!this.buckets[index]) {
-      return false;
-    }
-    const items = this.buckets[index];
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].key === key) {
-        items.splice(i, 1);
-        return true;
-      }
+    const bucketIdx = this.buckets[index].findIndex((i) => i.key === key);
+    if (bucketIdx !== -1) {
+      this.buckets[index].splice(bucketIdx, 1);
+      return true;
     }
     return false;
   }
 
   entries() {
-    let entries = [];
-    for (let i = 0; i < this.buckets.length; i++) {
-      if (!this.buckets[i]) continue;
-      for (let j = 0; j < this.buckets[i].length; j++) {
-        entries.push([this.buckets[i][j].key, this.buckets[i][j].value]);
-      }
-    }
-    return entries;
+    return this.buckets.reduce((acc, bucket) => {
+      return [...acc, ...bucket];
+    }, []);
   }
 }

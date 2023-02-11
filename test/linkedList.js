@@ -3,8 +3,8 @@ import * as practice from "../practice/linkedList.js";
 let LinkedList;
 
 describe.each([
-  ["src", src],
-  // ["practice", practice],
+  // ["src", src],
+  ["practice", practice],
 ])("%s", (name, module) => {
   beforeAll(() => {
     LinkedList = module.LinkedList;
@@ -27,9 +27,9 @@ describe.each([
     expect(ll.values()).toEqual([0, 1, 2, 3, 4]);
   });
 
-  test("push", () => {
+  test("unshift", () => {
     let ll = new LinkedList(1, 2, 3);
-    ll.push(0);
+    ll.unshift(0);
     expect(ll.values()).toEqual([0, 1, 2, 3]);
   });
 

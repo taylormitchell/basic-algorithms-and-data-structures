@@ -1,127 +1,124 @@
-class Node {
-  constructor(item, next = null) {
-    this.item = item;
+export class Node {
+  constructor(value, next) {
+    this.value = value;
     this.next = next;
   }
 }
-
 export class LinkedList {
-  constructor(...items) {
-    this.head = items.length > 0 ? new Node(items[0]) : null;
-    let prevNode = this.head;
-    for (const item of items.slice(1)) {
-      const node = new Node(item);
-      prevNode.next = node;
-      prevNode = node;
-    }
-    this.tail = prevNode;
+  constructor(...values) {
+    this.head = null;
+    this.tail = null;
+    values.forEach((v) => this.push(v));
   }
 
-  push(item) {
-    const node = new Node(item);
-    node.next = this.head;
-    this.head = node;
-    if (!this.tail) {
-      this.tail = node;
-    }
-  }
-
-  append(item) {
-    if (!this.tail) {
-      this.push(item);
+  unshift(value) {
+    const node = new Node(value);
+    if (!this.head) {
+      this.head = this.tail = node;
     } else {
-      const node = new Node(item);
+      node.next = this.head;
+      this.head = node;
+    }
+  }
+
+  push(value) {
+    const node = new Node(value);
+    if (!this.head) {
+      this.head = this.tail = node;
+    } else {
       this.tail.next = node;
       this.tail = node;
     }
   }
 
-  pop() {
+  shift() {
     if (!this.head) {
       return;
+    } else {
+      const value = this.head.value;
+      this.head = this.head.next;
+      return value;
     }
-    const node = this.head;
-    this.head = this.head.next;
-    if (!this.head) {
-      this.tail = null;
-    }
-    return node.item;
   }
 
   find(fn) {
-    fn = this.fnify(fn);
-    let node = this.head;
-    while (node) {
-      if (fn(node.item)) {
-        return node.item;
-      }
-      node = node.next;
+    const [, node] = this.findWithPrev(fn);
+    return node ? node.value : undefined;
+  }
+
+  insert(value, fn) {
+    return this.insertBefore(value, fn);
+  }
+
+  delete(value) {
+    const [prev, node] = this.findWithPrev(value);
+    if (!node) {
+      // not found
+      return false;
+    } else if (!prev) {
+      // delete head
+      this.shift();
+      return true;
+    } else {
+      // everything else
+      prev.next = node.next;
+      return true;
     }
   }
 
-  insert(item, fn) {
-    fn = this.fnify(fn);
-    let prevNode = null;
-    let node = this.head;
-    while (node) {
-      if (fn(node.item)) {
-        const newNode = new Node(item);
-        newNode.next = node;
-        if (prevNode) {
-          newNode.next = node;
-          prevNode.next = newNode;
-        } else {
-          newNode.next = this.head;
-          this.head = newNode;
-        }
-        return true;
-      }
-      prevNode = node;
-      node = node.next;
+  insertAfter(value, fn) {
+    const newNode = new Node(value);
+    const [, node] = this.findWithPrev(fn);
+    if (!node) {
+      // not found
+      return false;
+    } else {
+      newNode.next = node.next;
+      node.next = newNode;
+      return true;
     }
-    return false;
   }
 
-  has(fn) {
-    return this.find(fn) !== undefined;
+  insertBefore(value, fn) {
+    const [prev, node] = this.findWithPrev(fn);
+    if (!node) {
+      // not found
+      return false;
+    } else if (!prev) {
+      // insert before head
+      this.unshift(value);
+      return true;
+    } else {
+      // insert everywhere else
+      const newNode = new Node(value, node);
+      prev.next = newNode;
+      return true;
+    }
   }
 
-  delete(fn) {
-    fn = this.fnify(fn);
-    let prevNode = null;
-    let node = this.head;
+  findWithPrev(fnOrValue) {
+    const fn = typeof fnOrValue === "function" ? fnOrValue : (node) => node.value === fnOrValue;
+    let [prev, node] = [null, this.head];
     while (node) {
-      if (fn(node.item)) {
-        if (!prevNode) {
-          this.head = this.head.next;
-        } else if (!node.next) {
-          this.tail = prevNode;
-          this.tail.next = null;
-        } else {
-          prevNode.next = node.next;
-        }
-        return true;
+      if (fn(node)) {
+        return [prev, node];
       }
-      prevNode = node;
-      node = node.next;
+      [prev, node] = [node, node.next];
     }
-    return false;
+    return [null, null];
+  }
+
+  has(fnOrValue) {
+    return this.find(fnOrValue) !== undefined;
   }
 
   values() {
-    const result = [];
-    let node = this.head;
-    while (node) {
-      result.push(node.item);
-      node = node.next;
+    const values = [];
+    let n = this.head;
+    while (n) {
+      values.push(n.value);
+      n = n.next;
     }
-    return result;
-  }
-
-  fnify(value) {
-    if (typeof value === "function") {
-      return value;
-    }
-    return (item) => item === value;
+    return values;
   }
 }

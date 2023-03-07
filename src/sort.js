@@ -3,8 +3,8 @@ export function quickSortSimple(arr) {
     return arr;
   }
   const pivot = arr[arr.length - 1];
-  const left = arr.filter((v) => v <= pivot);
-  const right = arr.filter((v) => v > pivot);
+  const left = arr.slice(0, -1).filter((v) => v <= pivot);
+  const right = arr.slice(0, -1).filter((v) => v > pivot);
   return [...quickSortSimple(left), pivot, ...quickSortSimple(right)];
 }
 

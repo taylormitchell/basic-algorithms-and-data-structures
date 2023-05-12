@@ -14,45 +14,45 @@ describe.each([
     let ll, values;
 
     values = [];
-    ll = new LinkedListDoubly(...values);
-    expect(ll.head).toEqual(null);
-    expect(ll.tail).toEqual(null);
+    ll = new LinkedListDoubly(values);
+    expect(ll.head).toEqual(undefined);
+    expect(ll.tail).toEqual(undefined);
 
     values = [0];
-    ll = new LinkedListDoubly(...values);
-    expect(ll.get(0)).toEqual(values[0]);
+    ll = new LinkedListDoubly(values);
+    expect(ll.peak()).toEqual(values[0]);
 
     values = [0, 1, 2];
-    ll = new LinkedListDoubly(...values);
+    ll = new LinkedListDoubly(values);
 
     expect(ll.head.value).toEqual(0);
     expect(ll.head.next.value).toEqual(1);
-    expect(ll.head.prev).toEqual(null);
+    expect(ll.head.prev).toEqual(undefined);
 
     expect(ll.head.next.prev.value).toEqual(0);
     expect(ll.head.next.next.value).toEqual(2);
 
     expect(ll.tail.value).toEqual(2);
     expect(ll.tail.prev.value).toEqual(1);
-    expect(ll.tail.next).toEqual(null);
+    expect(ll.tail.next).toEqual(undefined);
   });
 
   test("insert", () => {
     let values = [1, 3, 4];
-    let ll = new LinkedListDoubly(...values);
+    let ll = new LinkedListDoubly(values);
 
-    ll.insertBefore(0, 0);
+    ll.insertBefore(1, 0);
     expect(ll.values()).toEqual([0, 1, 3, 4]);
     expect(ll.valuesReverse()).toEqual([0, 1, 3, 4].reverse());
 
-    ll.insertAfter(2, 1);
+    ll.insertAfter(1, 2);
     expect(ll.values()).toEqual([0, 1, 2, 3, 4]);
     expect(ll.valuesReverse()).toEqual([0, 1, 2, 3, 4].reverse());
   });
 
   test("unshift", () => {
     let values = [1, 2, 3];
-    let ll = new LinkedListDoubly(...values);
+    let ll = new LinkedListDoubly(values);
     ll.unshift(0);
     expect(ll.values()).toEqual([0, 1, 2, 3]);
     expect(ll.valuesReverse()).toEqual([0, 1, 2, 3].reverse());
@@ -60,15 +60,16 @@ describe.each([
 
   test("push", () => {
     let values = [1, 2, 3];
-    let ll = new LinkedListDoubly(...values);
-    ll.push(4, 5);
+    let ll = new LinkedListDoubly(values);
+    ll.push(4);
+    ll.push(5);
     expect(ll.values()).toEqual([1, 2, 3, 4, 5]);
     expect(ll.valuesReverse()).toEqual([1, 2, 3, 4, 5].reverse());
   });
 
   test("delete", () => {
     let values = [1, 2, 3, 4, 5];
-    let ll = new LinkedListDoubly(...values);
+    let ll = new LinkedListDoubly(values);
 
     // delete head
     ll.delete(1);
@@ -90,9 +91,9 @@ describe.each([
 
   test("delete last node", () => {
     let values = [0];
-    let ll = new LinkedListDoubly(...values);
+    let ll = new LinkedListDoubly(values);
     ll.delete(0);
-    expect(ll.head).toEqual(null);
-    expect(ll.tail).toEqual(null);
+    expect(ll.head).toEqual(undefined);
+    expect(ll.tail).toEqual(undefined);
   });
 });

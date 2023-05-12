@@ -1,21 +1,31 @@
 class Node {
-  constructor(value, next = null, prev = null) {
+  constructor(value, key, prev, next) {
     this.value = value;
-    this.next = next;
+    this.key = key || value;
     this.prev = prev;
+    this.next = next;
   }
 }
-
 export class LinkedListDoubly {
-  constructor(...values) {
-    this.head = null;
-    this.tail = null;
-    values.forEach((value) => this.push(value));
+  constructor(arr, keys = []) {
+    this.head;
+    this.tail;
+    arr.forEach((v, i) => this.push(v, keys[i]));
   }
 
-  /**Insert value at head */
-  unshift = (value) => {
-    const node = new Node(value);
+  // add
+  push(value, key) {
+    const node = new Node(value, key);
+    if (this.isEmpty()) {
+      this.head = this.tail = node;
+    } else {
+      this.tail.next = node;
+      node.prev = this.tail;
+      this.tail = node;
+    }
+  }
+  unshift(value, key) {
+    const node = new Node(value, key);
     if (this.isEmpty()) {
       this.head = this.tail = node;
     } else {
@@ -23,134 +33,104 @@ export class LinkedListDoubly {
       this.head.prev = node;
       this.head = node;
     }
-  };
+  }
 
-  /**Insert value at tail */
-  push = (...values) => {
-    for (const value of values) {
-      const node = new Node(value);
-      if (!this.tail) {
-        this.head = this.tail = node;
-      } else {
-        this.tail.next = node;
-        node.prev = this.tail;
-        this.tail = node;
-      }
-    }
-  };
-
-  /**Remove head and return it's value */
-  shift = () => {
-    if (this.isEmpty()) return null;
-    const value = this.head.value;
-    this.deleteNode(this.head);
-    return value;
-  };
-
-  /**
-   * Get node by index
-   * @param {number} index positive integer
-   * @returns
-   */
-  getNodeByIndex = (index) => {
-    let i = 0;
-    let node = this.head;
-    while (node) {
-      if (i === index) {
-        return node;
-      }
-      i++;
-      node = node.next;
-    }
-    return null;
-  };
-
-  /**Insert value after index */
-  insertAfter = (value, index) => {
-    const nodeAtIndex = this.getNodeByIndex(index);
-    if (!nodeAtIndex) {
-      // insert after tail
-      this.push(value);
+  // remove
+  shift() {
+    let res;
+    if (this.isEmpty()) {
+      return res;
+    } else if (this.head === this.tail) {
+      res = this.head;
+      this.head = this.tail = undefined;
+      return res;
     } else {
-      const node = new Node(value);
-      // insert anywhere else
-      const nodeAfterIndex = nodeAtIndex.next;
-
-      nodeAtIndex.next = node;
-      node.prev = nodeAtIndex;
-
-      node.next = nodeAfterIndex;
-      nodeAfterIndex.prev = node;
-    }
-  };
-
-  /**Insert value before index */
-  insertBefore = (value, index) => {
-    const nodeAtIndex = this.getNodeByIndex(index);
-    if (!nodeAtIndex) {
-      this.push(value);
-    } else if (index === 0) {
-      this.unshift(value);
-    } else {
-      const node = new Node(value);
-      // insert in middle
-      const nodeBeforeIndex = nodeAtIndex.prev;
-
-      nodeBeforeIndex.next = node;
-      node.prev = nodeBeforeIndex;
-
-      node.next = nodeAtIndex;
-      nodeAtIndex.prev = node;
-    }
-  };
-
-  /**Get node by value */
-  getNodeByValue = (value) => {
-    let node = this.head;
-    while (node) {
-      if (node.value === value) {
-        return node;
-      }
-      node = node.next;
-    }
-    return null;
-  };
-
-  /**Get value by index */
-  get = (index) => {
-    const node = this.getNodeByIndex(index);
-    return node ? node.value : null;
-  };
-
-  /**
-   *
-   * @param {*} node node must be in the linked list
-   * @returns
-   */
-  deleteNode = (node) => {
-    if (!node) return false;
-    if (node === this.head && node === this.tail) {
-      this.head = this.tail = null;
-    } else if (node === this.head) {
+      res = this.head;
       this.head = this.head.next;
-      this.head.prev = null;
-      return;
-    } else if (node === this.tail) {
-      this.tail = this.tail.prev;
-      this.tail.next = null;
-      return;
+      this.head.prev = undefined;
+      return res;
+    }
+  }
+  pop() {
+    let res;
+    if (this.isEmpty()) {
+      return res;
+    } else if (this.head === this.tail) {
+      res = this.head;
+      this.head = this.tail = undefined;
+      return res;
     } else {
+      res = this.tail;
+      this.tail = this.tail.prev;
+      this.tail.next = undefined;
+      return res;
+    }
+  }
+  delete(key) {
+    if (this.isEmpty()) {
+      return;
+    } else if (this.head.key === key) {
+      return this.shift();
+    } else if (this.tail.key === key) {
+      return this.pop();
+    } else {
+      const node = this.get(key);
+      if (!node) return;
       node.prev.next = node.next;
       node.next.prev = node.prev;
+      return node;
     }
-  };
+  }
 
-  delete = (value) => {
-    const node = this.getNodeByValue(value);
-    return this.deleteNode(node);
-  };
+  // insert
+  insertBefore(beforeKey, value, key) {
+    if (this.isEmpty()) {
+      return;
+    } else if (this.head.key === beforeKey) {
+      return this.unshift(value, key);
+    } else {
+      const newNode = new Node(value, key);
+      const node = this.get(beforeKey);
+      newNode.prev = node.prev;
+      newNode.next = node;
+      node.prev.next = newNode;
+      node.prev = newNode;
+    }
+  }
+  insertAfter(afterKey, value, key) {
+    if (this.isEmpty()) {
+      return;
+    } else if (this.tail.key === afterKey) {
+      return this.push(value, key);
+    } else {
+      const newNode = new Node(value, key);
+      const node = this.get(afterKey);
+      newNode.prev = node;
+      newNode.next = node.next;
+      node.next.prev = newNode;
+      node.next = newNode;
+    }
+  }
 
-  values = () => {
+  // helpers
+  get(key) {
+    let node = this.head;
+    while (node) {
+      if (node.key === key) {
+        return node;
+      }
+      node = node.next;
+    }
+  }
+  isEmpty() {
+    return this.head === undefined;
+  }
+
+  peak() {
+    return this.head?.value;
+  }
+
+  values() {
     let result = [];
     let node = this.head;
     while (node) {
@@ -158,9 +138,9 @@ export class LinkedListDoubly {
       node = node.next;
     }
     return result;
-  };
+  }
 
-  valuesReverse = () => {
+  valuesReverse() {
     let result = [];
     let node = this.tail;
     while (node) {
@@ -168,13 +148,5 @@ export class LinkedListDoubly {
       node = node.prev;
     }
     return result;
-  };
-
-  peak = () => {
-    return this.head?.value;
-  };
-
-  isEmpty = () => {
-    return this.head === null;
-  };
+  }
 }

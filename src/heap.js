@@ -1,93 +1,78 @@
 class Heap {
-  constructor(values, compare = (a, b) => a > b) {
-    this.values = heapify(values, compare);
-    this.compare = compare;
-  }
-
-  pop() {
-    if (this.values.length === 0) return;
-    const top = this.values[0];
-    this.values[0] = this.values.pop();
-    this.values = heapifyDown(this.values, 0, this.compare);
-    return top;
+  constructor(arr, isTop = (p, c) => p < c) {
+    this.values = heapify(arr, isTop);
+    this.isTop = isTop;
   }
 
   push(value) {
     this.values.push(value);
-    heapifyUp(this.values, this.values.length - 1, this.compare);
+    bubbleUp(this.values, this.values.length - 1, this.isTop);
+  }
+
+  pop() {
+    if (!this.values) return;
+    swap(this.values, 0, this.values.length - 1);
+    const top = this.values.pop();
+    bubbleDown(this.values, 0, this.isTop);
+    return top;
   }
 }
 
 export class MinHeap extends Heap {
-  constructor(...values) {
-    super(values, (a, b) => a < b);
+  constructor(...arr) {
+    super(arr, (p, c) => p < c);
   }
 }
 
 export class MaxHeap extends Heap {
-  constructor(...values) {
-    super(values, (a, b) => a > b);
+  constructor(...arr) {
+    super(arr, (p, c) => p > c);
   }
 }
 
-export function heapify(values, compare = (a, b) => a > b) {
-  if (values.length <= 1) return values;
-  const lastParent = getParentIndex(values.length - 1);
-  for (let i = lastParent; i >= 0; i--) {
-    values = heapifyDown(values, i, compare);
+function getParent(i) {
+  return Math.floor((i - 1) / 2);
+}
+
+function getChildren(i) {
+  return [2 * i + 1, 2 * i + 2];
+}
+
+function swap(arr, i, j) {
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+  return arr;
+}
+
+function bubbleDown(values, p, isTop = (p, c) => p < c) {
+  if (values[p] === undefined) return values;
+  const [l, r] = getChildren(p);
+  let top = p;
+  if (values[l] !== undefined && !isTop(values[top], values[l])) {
+    top = l;
+  }
+  if (values[r] !== undefined && !isTop(values[top], values[r])) {
+    top = r;
+  }
+  if (top !== p) {
+    swap(values, p, top);
+    bubbleDown(values, top, isTop);
   }
   return values;
 }
 
-function heapifyUp(values, child, compare = (a, b) => a > b) {
-  if (values[child] === undefined) {
-    throw new Error(
-      `invalid index ${child} for array of length ${values.length}`
-    );
-  }
-  const parent = getParentIndex(child);
-  if (parent !== null && compare(values[child], values[parent])) {
-    swap(values, parent, child);
-    values = heapifyUp(values, parent, compare);
+function bubbleUp(values, c, isTop = (p, c) => p < c) {
+  if (values[c] === undefined) return values;
+  const p = getParent(c);
+  if (values[p] !== undefined && !isTop(values[p], values[c])) {
+    swap(values, p, c);
+    bubbleUp(values, p);
   }
   return values;
 }
 
-function heapifyDown(values, parent, compare = (a, b) => a > b) {
-  if (values[parent] === undefined) {
-    throw new Error(
-      `invalid index ${parent} for array of length ${values.length}`
-    );
-  }
-  const [left, right] = getChildIndices(parent);
-
-  let mostest = parent;
-  if (left < values.length && compare(values[left], values[mostest])) {
-    mostest = left;
-  }
-  if (right < values.length && compare(values[right], values[mostest])) {
-    mostest = right;
-  }
-
-  if (mostest !== parent) {
-    swap(values, parent, mostest);
-    values = heapifyDown(values, mostest, compare);
+function heapify(values, isTop = (p, c) => p < c) {
+  for (let p = getParent(values.length - 1); p >= 0; p--) {
+    bubbleDown(values, p, isTop);
   }
   return values;
-}
-
-function getParentIndex(index) {
-  if (index === 0) return null;
-  const parent = Math.floor((index - 1) / 2);
-  return parent;
-}
-
-function getChildIndices(index) {
-  let left = 2 * index + 1;
-  let right = left + 1;
-  return [left, right];
-}
-
-function swap(values, a, b) {
-  [values[a], values[b]] = [values[b], values[a]];
 }

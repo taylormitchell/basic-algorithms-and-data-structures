@@ -2,7 +2,7 @@ import { randomInt } from "./util.js";
 
 // BST
 export class Node {
-  constructor(value, key = null, left = null, right = null) {
+  constructor(value, { key = null, left = null, right = null } = {}) {
     this.value = value;
     this.key = key || value;
     this.left = left;
@@ -30,7 +30,7 @@ function calcBalance(left, right) {
  *  (pivot.left)   pl    7             rl  pl
  *
  */
-function leftRotate(root) {
+function rotateLeft(root) {
   let pivot = root.right;
   root.right = pivot.left;
   pivot.left = root;
@@ -44,19 +44,50 @@ function leftRotate(root) {
  *
  * Example:
  *
- *    (root)  5                            4
+ *    (root)  5                           4
  *          /   \                        /  \
  * (pivot) 4    rr (root.right)  ->    3     5
  *        / \                               / \
  *       3  pr (pivot.right)              pr  rr
  */
-function rightRotate(root) {
+function rotateRight(root) {
   let pivot = root.left;
   root.left = pivot.right;
   pivot.right = root;
   root.height = calcHeight(root.left, root.right);
   pivot.height = calcHeight(pivot.left, pivot.right);
   return pivot;
+}
+
+function rebalance(root) {
+  const balance = calcBalance(root.left, root.right);
+  // Left
+  if (balance > 1) {
+    // Left
+    if (calcBalance(root.left?.left, root.left?.right) >= 0) {
+      return rotateRight(root);
+    }
+    // Right
+    else {
+      root.left = rotateLeft(root.left);
+      return rotateRight(root);
+    }
+  }
+  // Right
+  else if (balance < -1) {
+    // Right
+    if (calcBalance(root.right?.left, root.right?.right) <= 0) {
+      return rotateLeft(root);
+    }
+    // Left
+    else {
+      root.right = rotateRight(root.right);
+      return rotateLeft(root);
+    }
+  } else {
+    // Already balanced
+    return root;
+  }
 }
 
 export function insert(root, node) {
@@ -68,30 +99,8 @@ export function insert(root, node) {
   } else {
     root.right = insert(root.right, node);
   }
-
   root.height = calcHeight(root.left, root.right);
-  let balance = calcBalance(root.left, root.right);
-
-  // Left Left
-  if (balance > 1 && node.key < root.left.key) {
-    return rightRotate(root);
-  }
-  // Right Right
-  if (balance < -1 && node.key > root.right.key) {
-    return leftRotate(root);
-  }
-  // Left Right
-  if (balance > 1 && node.key > root.left.key) {
-    root.left = leftRotate(root.left);
-    return rightRotate(root);
-  }
-  // Right Left
-  if (balance < -1 && node.key < root.right.key) {
-    root.right = rightRotate(root.right);
-    return leftRotate(root);
-  }
-
-  return root;
+  return rebalance(root);
 }
 
 export function search(root, key) {
@@ -107,9 +116,20 @@ export function search(root, key) {
   }
 }
 
-export function remove(root, key) {
+export function min(root) {
   if (!root) {
     return null;
+  }
+  if (!root.left) {
+    return root;
+  }
+  return min(root.left);
+}
+
+export function remove(root, key) {
+  let res = null;
+  if (!root) {
+    return res;
   }
 
   if (root.key === key) {
@@ -127,54 +147,43 @@ export function remove(root, key) {
     *     (...)   (...)
     */
     if (root.left === null) {
-      return root.right;
+      res = root.right;
     } else if (root.right === null) {
-      return root.left;
+      res = root.left;
     } else {
       // Otherwise it has 2 children, in which case we'll replace it
       // with the next-largest node from it's right subtree
-      let nextNode;
-
+      const nextNode = min(root.right);
       /**
-       * If the right child doesn't have a left sub-tree,
-       * then it's the next largest node.
-       *    root
-       *        \
-       *         nextNode
-       *         /     \
-       *       null    (...)
+       * The nextNode is either the root.right or it's way down the left side
+       * of the right subtree. We need to handle both cases differently.
+       *
+       * case 1:                   case 2:
+       *
+       *    root                      root
+       *        \                    /    \
+       *         nextNode          ...  root.right
+       *         /     \                   /    \
+       *       null    (...)             ...    ...
+       *                                 /
+       *                              parentNode
+       *                              /        \
+       *                            nextNode   ...
+       *                            /    \
+       *                           null   ...
        */
-      nextNode = root.right;
-      if (nextNode.left === null) {
+      if (nextNode === root.right) {
+        // case 1
         nextNode.left = root.left;
-        return nextNode;
+        res = nextNode;
       } else {
-        /**
-         * Otherwise we need to drill down to the far left leaf node
-         *
-         *    root
-         *        \
-         *       root.right
-         *         /
-         *       ...
-         *       /
-         *    parentNode
-         *    /
-         *  nextNode
-         *  /    \
-         * null   (...)
-         */
-        let parentNode;
-        while (nextNode.left) {
-          parentNode = nextNode;
-          nextNode = nextNode.left;
-        }
+        // case 2
         // replace nextNode with it's own children
         parentNode.left = nextNode.right;
         // then sub nextNode
         nextNode.left = root.left;
         nextNode.right = root.right;
-        return nextNode;
+        res = nextNode;
       }
     }
   } else {
@@ -184,8 +193,11 @@ export function remove(root, key) {
     } else {
       root.right = remove(root.right, key);
     }
-    return root;
+    res = root;
   }
+  // Update height and rebalance
+  res.height = calcHeight(res.left, res.right);
+  return rebalance(res);
 }
 
 // Helpers
@@ -199,14 +211,15 @@ export function remove(root, key) {
  * @returns
  */
 export function simpleTree() {
-  let root = null;
-  root = insert(root, new Node(4));
-  root = insert(root, new Node(2));
-  root = insert(root, new Node(1));
-  root = insert(root, new Node(3));
-  root = insert(root, new Node(5));
-  root = insert(root, new Node(6));
-  return root;
+  return new Node(4, {
+    left: new Node(2, {
+      left: new Node(1),
+      right: new Node(3),
+    }),
+    right: new Node(5, {
+      right: new Node(6),
+    }),
+  });
 }
 
 export function randomTree(size = 10, min = 0, max = 100) {
@@ -218,4 +231,9 @@ export function randomTree(size = 10, min = 0, max = 100) {
     insert(root, new Node(randomInt(min, max)));
   }
   return root;
+}
+
+export function isAVL(node) {
+  if (node === null) return true;
+  return Math.abs(calcBalance(node.left, node.right)) <= 1 && isAVL(node.left) && isAVL(node.right);
 }

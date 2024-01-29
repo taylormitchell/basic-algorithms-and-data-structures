@@ -121,7 +121,7 @@ export function min(root) {
     return null;
   }
   if (!root.left) {
-    return root;
+    return;
   }
   return min(root.left);
 }
@@ -153,7 +153,7 @@ export function remove(root, key) {
     } else {
       // Otherwise it has 2 children, in which case we'll replace it
       // with the next-largest node from it's right subtree
-      const nextNode = min(root.right);
+
       /**
        * The nextNode is either the root.right or it's way down the left side
        * of the right subtree. We need to handle both cases differently.
@@ -172,18 +172,18 @@ export function remove(root, key) {
        *                            /    \
        *                           null   ...
        */
-      if (nextNode === root.right) {
-        // case 1
-        nextNode.left = root.left;
-        res = nextNode;
+      if (!root.right.left) {
+        res = root.right;
+        res.left = root.left;
       } else {
-        // case 2
-        // replace nextNode with it's own children
-        parentNode.left = nextNode.right;
-        // then sub nextNode
-        nextNode.left = root.left;
-        nextNode.right = root.right;
-        res = nextNode;
+        let parent = root;
+        let child = root.right;
+        const { next, grandchild } = remove2(child);
+        child.left = grandchild;
+        child.height = calcHeight(child.left, child.right);
+        res = next;
+        res.left = root.left;
+        res.right = root.right;
       }
     }
   } else {
@@ -236,4 +236,37 @@ export function randomTree(size = 10, min = 0, max = 100) {
 export function isAVL(node) {
   if (node === null) return true;
   return Math.abs(calcBalance(node.left, node.right)) <= 1 && isAVL(node.left) && isAVL(node.right);
+}
+
+// given some node
+// find the next largest node
+// if it's the root.right, then replace with that, adding the root.left as the new root.right.left
+// then rebalance
+// otherwise, recurse down the left side of the root.right subtree until you find the next largest node
+// then replace that node with it's own right subtree
+// when recursing back up, rebalance each node
+// return the new root
+
+function remove2(node) {
+  let parent = node;
+  let child = node.left;
+  if (!child.left) {
+    throw new Error("Must pass node that has a left child");
+  } else if (child.left) {
+    const { next, grandchild } = remove2(child);
+    child.left = grandchild;
+    child.height = calcHeight(child.left, child.right);
+    return {
+      next,
+      grandchild: rebalance(child),
+    };
+  } else {
+    const next = child;
+    parent.left = child.right;
+    parent.height = calcHeight(parent.left, parent.right);
+    return {
+      next,
+      grandchild: rebalance(parent),
+    };
+  }
 }

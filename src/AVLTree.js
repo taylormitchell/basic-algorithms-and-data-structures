@@ -10,12 +10,12 @@ export class Node {
   }
 }
 
-function calcHeight(left, right) {
-  return Math.max(left?.height || 0, right?.height || 0) + 1;
+function calcHeight(node) {
+  return Math.max(node.left?.height || 0, node.right?.height || 0) + 1;
 }
 
-function calcBalance(left, right) {
-  return (left?.height || 0) - (right?.height || 0);
+function calcBalance(node) {
+  return (node.left?.height || 0) - (node.right?.height || 0);
 }
 
 /**
@@ -33,8 +33,8 @@ function rotateLeft(root) {
   let pivot = root.right;
   root.right = pivot.left;
   pivot.left = root;
-  root.height = calcHeight(root.left, root.right);
-  pivot.height = calcHeight(pivot.left, pivot.right);
+  root.height = calcHeight(root);
+  pivot.height = calcHeight(pivot);
   return pivot;
 }
 
@@ -53,19 +53,19 @@ function rotateRight(root) {
   let pivot = root.left;
   root.left = pivot.right;
   pivot.right = root;
-  root.height = calcHeight(root.left, root.right);
-  pivot.height = calcHeight(pivot.left, pivot.right);
+  root.height = calcHeight(root);
+  pivot.height = calcHeight(pivot);
   return pivot;
 }
 
 function rebalance(root) {
   if (!root) return null;
-  root.height = calcHeight(root.left, root.right);
-  const balance = calcBalance(root.left, root.right);
+  root.height = calcHeight(root);
+  const balance = calcBalance(root);
   // Left
   if (balance > 1) {
     // Left
-    if (calcBalance(root.left?.left, root.left?.right) >= 0) {
+    if (calcBalance(root.left) >= 0) {
       return rotateRight(root);
     }
     // Right
@@ -77,7 +77,7 @@ function rebalance(root) {
   // Right
   else if (balance < -1) {
     // Right
-    if (calcBalance(root.right?.left, root.right?.right) <= 0) {
+    if (calcBalance(root.right) <= 0) {
       return rotateLeft(root);
     }
     // Left
@@ -114,9 +114,9 @@ export function remove(root, key) {
   } else {
     // 0 or 1 child
     if (root.left === null) {
-      return rebalance(root.right);
+      return root.right;
     } else if (root.right === null) {
-      return rebalance(root.left);
+      return root.left;
     }
     // 2 children
     else {

@@ -1,17 +1,17 @@
-import { insert, remove, Node, isAVL } from "../src/AVLTree";
+import { insert, remove, Node, isAVL, AVLTree } from "../src/AVLTree";
 import { toString } from "../src/binaryTree";
 
 describe("AVLTree", () => {
   test("should remain balanced after insertion", () => {
-    let root = null;
-    root = insert(root, new Node(10));
-    root = insert(root, new Node(20));
-    root = insert(root, new Node(30));
-    root = insert(root, new Node(40));
-    root = insert(root, new Node(50));
-    root = insert(root, new Node(25));
-    console.log(toString(root));
-    expect(isAVL(root)).toBe(true);
+    const tree = new AVLTree();
+    tree.insert(new Node(10));
+    tree.insert(new Node(20));
+    tree.insert(new Node(30));
+    tree.insert(new Node(40));
+    tree.insert(new Node(50));
+    tree.insert(new Node(25));
+    console.log(tree.toString());
+    expect(tree.validate()).toBe(true);
   });
 
   test("should remain balanced after deletion", () => {

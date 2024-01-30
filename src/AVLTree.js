@@ -1,5 +1,4 @@
-import { randomInt } from "./util.js";
-
+import { toString, search } from "./binarySearchTree.js";
 // BST
 export class Node {
   constructor(value, { key = null, left = null, right = null } = {}) {
@@ -60,6 +59,8 @@ function rotateRight(root) {
 }
 
 function rebalance(root) {
+  if (!root) return null;
+  root.height = calcHeight(root.left, root.right);
   const balance = calcBalance(root.left, root.right);
   // Left
   if (balance > 1) {
@@ -99,156 +100,87 @@ export function insert(root, node) {
   } else {
     root.right = insert(root.right, node);
   }
-  root.height = calcHeight(root.left, root.right);
   return rebalance(root);
 }
 
-export function search(root, key) {
-  if (!root) {
-    return null;
-  }
-  if (key === root.key) {
-    return root;
-  } else if (key < root.key) {
-    return search(root.left, key);
-  } else {
-    return search(root.right, key);
-  }
-}
-
-export function min(root) {
-  if (!root) {
-    return null;
-  }
-  if (!root.left) {
-    return;
-  }
-  return min(root.left);
-}
-
 export function remove(root, key) {
-  let res = null;
-  if (!root) {
-    return res;
-  }
-
-  if (root.key === key) {
-    // Now that we have the matching node, we need to find
-    // a suitable node to replace it in the tree.
-
-    /**
-    * If the node has 0 or 1 children, then replace it
-    * with it's other child
-       
-    *    root
-    *   /    \
-    * null    node
-    *        /    \
-    *     (...)   (...)
-    */
+  if (!root) return null;
+  if (root.key > key) {
+    root.left = remove(root.left, key);
+    return rebalance(root);
+  } else if (root.key < key) {
+    root.right = remove(root.right, key);
+    return rebalance(root);
+  } else {
+    // 0 or 1 child
     if (root.left === null) {
-      res = root.right;
+      return rebalance(root.right);
     } else if (root.right === null) {
-      res = root.left;
-    } else {
-      // Otherwise it has 2 children, in which case we'll replace it
-      // with the next-largest node from it's right subtree
-
-      /**
-       * The nextNode is either the root.right or it's way down the left side
-       * of the right subtree. We need to handle both cases differently.
-       *
-       * case 1:                   case 2:
-       *
-       *    root                      root
-       *        \                    /    \
-       *         nextNode          ...  root.right
-       *         /     \                   /    \
-       *       null    (...)             ...    ...
-       *                                 /
-       *                              parentNode
-       *                              /        \
-       *                            nextNode   ...
-       *                            /    \
-       *                           null   ...
-       */
+      return rebalance(root.left);
+    }
+    // 2 children
+    else {
       if (!root.right.left) {
-        res = root.right;
-        res.left = root.left;
+        // next largest node is the right child
+        root.right.left = root.left;
+        return rebalance(root.right);
       } else {
+        // next largest node is the leftmost node of the right subtree
         let nextNode;
         root.right = removeMinimum(root.right, (node) => {
           nextNode = node;
         });
         nextNode.left = root.left;
         nextNode.right = root.right;
-        res = nextNode;
+        return rebalance(nextNode);
       }
     }
-  } else {
-    // Otherwise, keep drilling down to find matching node
-    if (root.key > key) {
-      root.left = remove(root.left, key);
-    } else {
-      root.right = remove(root.right, key);
-    }
-    res = root;
   }
-  if (!res) {
-    return null;
-  }
-  // Update height and rebalance
-  res.height = calcHeight(res.left, res.right);
-  return rebalance(res);
 }
 
-function removeMinimum(root, setMin) {
+/**
+ * Remove the minimum node from the tree and return the new root. Optionally,
+ * call a callback with the removed node.
+ */
+function removeMinimum(root, callback) {
   if (!root) {
     return null;
   }
   if (!root.left) {
-    setMin?.(root);
+    callback?.(root);
     return root.right;
   }
   root.left = removeMinimum(root.left, setMin);
-  root.height = calcHeight(root.left, root.right);
   return rebalance(root);
-}
-
-// Helpers
-
-/**
- * ```
- *      4
- *    2   5
- *  1  3    6
- * ```
- * @returns
- */
-export function simpleTree() {
-  return new Node(4, {
-    left: new Node(2, {
-      left: new Node(1),
-      right: new Node(3),
-    }),
-    right: new Node(5, {
-      right: new Node(6),
-    }),
-  });
-}
-
-export function randomTree(size = 10, min = 0, max = 100) {
-  if (size <= 0) {
-    return null;
-  }
-  let root = new Node(randomInt(min, max));
-  for (let i = 1; i < size; i++) {
-    insert(root, new Node(randomInt(min, max)));
-  }
-  return root;
 }
 
 export function isAVL(node) {
   if (node === null) return true;
   return Math.abs(calcBalance(node.left, node.right)) <= 1 && isAVL(node.left) && isAVL(node.right);
+}
+
+export class AVLTree {
+  constructor() {
+    this.root = null;
+  }
+
+  insert(node) {
+    this.root = insert(this.root, node);
+  }
+
+  search(key) {
+    return search(this.root, key);
+  }
+
+  remove(key) {
+    this.root = remove(this.root, key);
+  }
+
+  validate() {
+    return isAVL(this.root);
+  }
+
+  toString() {
+    return toString(this.root);
+  }
 }

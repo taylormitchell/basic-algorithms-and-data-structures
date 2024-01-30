@@ -16,7 +16,7 @@ function calcHeight(left, right) {
 }
 
 function calcBalance(left, right) {
-  return (right?.height || 0) - (left?.height || 0);
+  return (left?.height || 0) - (right?.height || 0);
 }
 
 /**
@@ -176,14 +176,13 @@ export function remove(root, key) {
         res = root.right;
         res.left = root.left;
       } else {
-        let parent = root;
-        let child = root.right;
-        const { next, grandchild } = remove2(child);
-        child.left = grandchild;
-        child.height = calcHeight(child.left, child.right);
-        res = next;
-        res.left = root.left;
-        res.right = root.right;
+        let nextNode;
+        root.right = removeMinimum(root.right, (node) => {
+          nextNode = node;
+        });
+        nextNode.left = root.left;
+        nextNode.right = root.right;
+        res = nextNode;
       }
     }
   } else {
@@ -195,9 +194,25 @@ export function remove(root, key) {
     }
     res = root;
   }
+  if (!res) {
+    return null;
+  }
   // Update height and rebalance
   res.height = calcHeight(res.left, res.right);
   return rebalance(res);
+}
+
+function removeMinimum(root, setMin) {
+  if (!root) {
+    return null;
+  }
+  if (!root.left) {
+    setMin?.(root);
+    return root.right;
+  }
+  root.left = removeMinimum(root.left, setMin);
+  root.height = calcHeight(root.left, root.right);
+  return rebalance(root);
 }
 
 // Helpers
@@ -236,37 +251,4 @@ export function randomTree(size = 10, min = 0, max = 100) {
 export function isAVL(node) {
   if (node === null) return true;
   return Math.abs(calcBalance(node.left, node.right)) <= 1 && isAVL(node.left) && isAVL(node.right);
-}
-
-// given some node
-// find the next largest node
-// if it's the root.right, then replace with that, adding the root.left as the new root.right.left
-// then rebalance
-// otherwise, recurse down the left side of the root.right subtree until you find the next largest node
-// then replace that node with it's own right subtree
-// when recursing back up, rebalance each node
-// return the new root
-
-function remove2(node) {
-  let parent = node;
-  let child = node.left;
-  if (!child.left) {
-    throw new Error("Must pass node that has a left child");
-  } else if (child.left) {
-    const { next, grandchild } = remove2(child);
-    child.left = grandchild;
-    child.height = calcHeight(child.left, child.right);
-    return {
-      next,
-      grandchild: rebalance(child),
-    };
-  } else {
-    const next = child;
-    parent.left = child.right;
-    parent.height = calcHeight(parent.left, parent.right);
-    return {
-      next,
-      grandchild: rebalance(parent),
-    };
-  }
 }
